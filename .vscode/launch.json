@@ -1,0 +1,10 @@
+{
+  "type": "node",
+  "request": "launch",
+  "name": "Launch via NPM",
+  "runtimeExecutable": "${workspaceFolder}\\node_modules\\.bin\\next",
+  "port": 9229,
+  "env": {
+    "NODE_OPTIONS": "--inspect"
+  }
+}

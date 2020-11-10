@@ -2,17 +2,20 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First, Install docker:
 
 ```bash
-npm run dev
-# or
-yarn dev
+https://docs.docker.com/engine/install/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Run below command to build and start the server
+```bash
+docker build -t client . && docker run --name CLIENT_CONTAINER -p 0.0.0.0:5000:3000 client
+```
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```bash
+visit http://localhost:5000/
+```
 
 ## Learn More
 

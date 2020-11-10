@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&display=swap');
+$desktopNavHeight: 64px;
+$mobileNavHeight: 48px;
+$dashboardNavigationHeight: 44px;
+$combinedAuthenticatedNavHeight: 108px;
+$footerHeight: 250px;
+
+$maxPageWidth: 1060px;
+
+$font__bodyRegular: 400 16px 'Source Sans Pro';
+$font__bodyBold: 700 16px 'Source Sans Pro';
+$font__headingLight: 300 12px 'Montserrat';
+$font__headingRegular: 400 12px 'Montserrat';
+$font__headingMedium: 500 12px 'Montserrat';
+$font__headingSemiBold: 600 12px 'Montserrat';
+$font__headingBold: 700 12px 'Montserrat';
+
+// ------ Transition Times ------
+$navigationTransitionTime: 200ms;
+
+// ------ Borders ------
+$borderRadius__button: 4px;
+$borderRadius__modal: 8px;
+
+// ------ Breakpoints ------
+$xs: 320px;
+$sm: 480px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+
+// ------ New Palette ------
+
+// Greys
+$fbGrey__dark: #485146;
+$fbGrey__standard: #6e7370;
+$fbGrey__light: #bbbbbb;
+$fbGrey__lightest: #f7f7f7;
+$fbGrey__white: #ffffff;
+
+// Oranges
+$fbOrange__dark: #965100;
+$fbOrange__standard: #eabf00;
+$fbOrange__light: #ffb661;
+$fbOrange__lightest: #fff4ec;
+
+// Greens
+$fbGreen__dark: #006b33;
+$fbGreen__standard: #009447;
+$fbGreen__light: #00c65f;
+$fbGreen__lightest: #edfff6;
+$fbGreen__transparent: rgba(0, 149, 100, 0.08);
+
+// Reds
+$fbRed__dark: #8b0000;
+$fbRed__standard: #d32f2f;
+$fbRed__light: #ff6261;
+$fbRed__lightest: #fff4f4;
+
+// Yellow
+$fbYellow__dark: #775f00;
+$fbYellow__standard: #bf9900;
+$fbYellow__light: #ffcc00;
+$fbYellow__lightest: #fff9e2;
+
+// Blues
+$fbBlue__standard: #0077aa;
+$fbBlue__dark: #004a6a;
+$fbTiel__standard: #14ab9a;
+
+// ------ Shadows ------
+$lightBoxShadow: 0px 0px 8px $fbGrey__lightest;
+$darkBoxShadow: 0px 2px 8px $fbGrey__standard;

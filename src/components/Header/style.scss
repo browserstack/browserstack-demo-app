@@ -1,0 +1,50 @@
+.Navbar_root__2kbI9 {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  transition-property: all;
+  box-shadow: 0 30px 30px rgba(0,0,0,.02), 0 0 8px rgba(0,0,0,.03), 0 1px 0 rgba(0,0,0,.05);
+  background-color: #fff;
+
+  .Navbar_logo__26S5Y {
+    cursor: pointer;
+    border-radius: 9999px;
+    border-width: 1px;
+  }
+  a {
+      color: inherit;
+      text-decoration: inherit;
+  }
+  a {
+      background-color: transparent;
+  }
+
+  .UserNav_root__343id {
+    position: relative;
+  }
+
+  .Navbar_link__3Blki {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text-primary);
+    line-height: 1.5rem;
+    font-weight: 500;
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,transform;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-duration: 75ms;
+    cursor: pointer;
+    color: rgb(134, 142, 150);
+  }
+  .logout-link {
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,transform;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-duration: .15s;
+    line-height: 1.5rem;
+    font-weight: 500 !important;
+    align-items: center;
+    text-transform: capitalize !important;
+  }
+}

@@ -1,0 +1,57 @@
+@import './variables.scss';
+
+.Button {
+  color: $fbGrey__light;
+  outline: 0;
+  &:hover {
+    color: $fbOrange__standard;
+    outline: 0;
+  }
+  &:focus {
+    outline: 0;
+  }
+  &.inactive {
+    color: $fbGrey__light;
+    &:hover {
+      background: transparent !important;
+      color: $fbGrey__light;
+    }
+  }
+  &.clicked {
+    color: $fbOrange__standard;
+    &.inactive {
+      color: $fbOrange__standard;
+      &:hover {
+        background: transparent !important;
+        color: $fbOrange__standard;
+      }
+    }
+  }
+  &.green {
+    &:hover {
+      color: $fbGrey__standard;
+    }
+    &.inactive {
+      color: $fbGrey__standard;
+      &:hover {
+        background: transparent !important;
+        color: $fbGrey__standard;
+      }
+    }
+    &.clicked {
+      color: $fbGreen__standard;
+      &.inactive {
+        color: $fbGreen__standard;
+        &:hover {
+          background: transparent !important;
+          color: $fbGreen__standard;
+        }
+      }
+    }
+  }
+}
+
+.Icon {
+  margin-top: -4px;
+  margin-bottom: -4px;
+}

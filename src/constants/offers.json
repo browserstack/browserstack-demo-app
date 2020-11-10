@@ -1,0 +1,14 @@
+{
+  "iphone": {
+    "title": "30% off on iPhones",
+    "imageId": "12064273040195392.jpg"
+  },
+  "dekstop": {
+    "title": "20% off on Desktops",
+    "imageId": "12064273040195392.jpg"
+  },
+  "shipping": {
+    "title": "Free Shipping",
+    "imageId": "12064273040195392.jpg"
+  }
+}
