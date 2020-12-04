@@ -22,7 +22,7 @@ The app also includes product images which are stored in [public/static](./publi
 
 
 ### Prerequisites
-You can run this project via docker or [Node.js](https://nodejs.org/en/) **version 12** installed on your machine.
+You can run this project via [Docker](https://www.docker.com/) or [Node.js](https://nodejs.org/en/) **version 12** installed on your machine.
 
 ### Installation with node
 
