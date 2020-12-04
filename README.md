@@ -2,9 +2,9 @@
 A shopping application to demonstrate real-world usage of BrowserStack testing methods, patterns, and workflows.
 
 ## Features
-🛠 Built with [React](https://reactjs.org/), [Next](https://nextjs.org/)
+🛠 Built with [React](https://reactjs.org/), [Next](https://nextjs.org/)  
 ⚡️ Zero database dependencies  
-🚀 Full-stack [Next](https://nextjs.org/)/[React](https://reactjs.org/) application with real-world features 
+🚀 Full-stack [Next](https://nextjs.org/)/[React](https://reactjs.org/) application with real-world features  
 👮‍♂️ Local Authentication  
 
 
@@ -12,7 +12,7 @@ A shopping application to demonstrate real-world usage of BrowserStack testing m
 
 BrowserStack Demo App is a full-stack Next/React application.
 
-The app is bundled with [offers data](./src/constants/offer.json), [orders data](./src/constants/orders.json) and [products data](./src/constants/products.json) that contains everything you need to start using the app and run tests out-of-the-box.
+The app is bundled with [offers data](./src/constants/offers.json), [orders data](./src/constants/orders.json) and [products data](./src/constants/products.json) that contains everything you need to start using the app and run tests out-of-the-box.
 
 The app also includes product images which are stored in [public/static](./public/static) folder.
 
