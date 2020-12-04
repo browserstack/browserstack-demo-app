@@ -1,6 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# browserstack-demo-app
+A shopping application to demonstrate real-world usage of BrowserStack testing methods, patterns, and workflows.
+
+## Features
+🛠 Built with [React][reactjs], [Next][nextjs]
+⚡️ Zero database dependencies  
+🚀 Full-stack [Next][nextjs]/[React][reactjs] application with real-world features 
+👮‍♂️ Local Authentication  
+
 
 ## Getting Started
+
+BrowserStack Demo App is a full-stack Next/React application.
+
+The app is bundled with [offers data](./src/constants/offer.json), [orders data](./src/constants/orders.json) and [products data](./src/constants/products.json) that contains everything you need to start using the app and run tests out-of-the-box.
+
+The app also includes product images which are stored in [public/static folder](./public/static)
+
+> 🚩 **Note**
+>
+> You can login to the app with any of the example users `image_not_loading_user, existing_orders_user or fav_user` . The default password for all users is `testingisfun99`.  
+
+
+### Prerequisites
+You can run this project via docker or [Node.js](https://nodejs.org/en/) **version 12** installed on your machine.
+
+### Installation with node
+
+```shell
+yarn install
+```
+
+### Run the app
+
+```shell
+yarn dev
+```
+
+visit `http://localhost:3000/`
+
+### Installation with docker
 
 First, Install docker:
 
@@ -8,26 +46,10 @@ First, Install docker:
 https://docs.docker.com/engine/install/
 ```
 
-## Run below command to build and start the server
-```bash
+### Run the app
+
+```shell
 docker build -t client . && docker run --name CLIENT_CONTAINER -p 0.0.0.0:5000:3000 client
 ```
 
-```bash
-visit http://localhost:5000/
-```
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+visit `http://localhost:5000/`
