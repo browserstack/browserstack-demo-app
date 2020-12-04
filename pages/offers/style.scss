@@ -1,0 +1,24 @@
+.fit {
+  display: block;
+  padding: 20px 2%;
+  margin: 50px auto 0;
+  min-height: calc(100vh - 88px);
+  color: #333;
+
+  .offers-listing {
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+
+    .offer {
+      img {
+        margin: 0 auto;
+      }
+      .offer-title {
+        position: relative;
+        padding: 20px;
+        font-size: 16px;
+      }
+    }
+  }
+}

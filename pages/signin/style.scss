@@ -1,0 +1,173 @@
+.login_logo {
+  text-align: center;
+  padding: 30px 0;
+  // background: url(../img/SwagLabs_logo.png) no-repeat center center;
+  margin-top: 30px;
+}
+
+.login_wrapper {
+  padding: 30px 0;
+  margin: 0px auto;
+  width: 70%;
+  display: flex;
+  justify-content: center;
+
+  .Modal_modal__3I0HK {
+    background-color: #fff;
+    margin: 0 auto;
+    padding: 3rem;
+    margin: 0;
+    flex: 1;
+    border-width: 1px;
+    border-color: rgb(233, 236, 239);
+
+    .api-error {
+      color: #E2231A;
+      font-size: 16px;
+    }
+
+    .Input_root__2vmVG {
+      background-color: #fff;
+      width: 100%;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,transform;
+      transition-duration: .15s;
+      transition-timing-function: cubic-bezier(.4,0,.2,1);
+      padding: .5rem 2.5rem .5rem 1.5rem;
+      border-width: 1px;
+      border-color: rgb(222, 226, 230);
+      color: rgb(134, 142, 150);
+    }
+    button, input, optgroup, select, textarea {
+        padding: 0;
+        line-height: inherit;
+        color: inherit;
+    }
+
+    .Button_slim__2caxo {
+      padding-top: .5rem;
+      padding-bottom: .5rem;
+      transform: none;
+      text-transform: none;
+    }
+    .Button_root__24MxS {
+      background-color: #333;
+      color: rgb(241, 243, 245);
+      cursor: pointer;
+      display: inline-flex;
+      border-radius: .125rem;
+      line-height: 1.5rem;
+      transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,transform;
+      transition-timing-function: cubic-bezier(.4,0,.2,1);
+      transition-duration: .15s;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);
+      font-weight: 600;
+      text-align: center;
+      justify-content: center;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      border-width: 1px;
+      border-color: transparent;
+      align-items: center;
+    }
+  }
+
+  .login_credentials_wrap {
+    flex: 1;
+    &-inner {
+      background-color: #efefef;
+      overflow: hidden;
+      max-width: 720px;
+      padding: 15px 30px 30px;
+      margin: 0 auto;
+      height: 100%;
+      display: flex;
+      flex-flow: column;
+      border: 2px solid #ededed;
+
+      .login_credentials {
+        float: left;
+        clear: both;
+        line-height: 24px;
+      }
+      .login_password {
+        float: right;
+        margin-top: 50px;
+        line-height: 24px;
+      }
+    }
+  }
+
+  &-inner {
+    width: 70%;
+    max-width: 720px;
+    padding: 15px 30px 30px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 2px solid #ededed;
+
+    input {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 0;
+    }
+
+    .bot_column {
+      float: none;
+      width: 100%;
+      height: auto;
+    }
+
+    .api-error {
+      color: #E2231A;
+      font-size: 16px;
+    }
+
+    .btn_primary, .btn_secondary, .btn_action, .btn_link {
+      cursor: pointer;
+      outline: none;
+      line-height: 40px;
+      padding: 0 20px;
+      font-size: 1.1em;
+      display: inline-block;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .form_input {
+      margin: 0 0 25px 0;
+      font-size: 18px;
+      width: 100%;
+      max-width: 380px;
+      border: 0px;
+      border-bottom: 1px solid #ccc;
+      outline: none;
+      padding: 10px 0;
+    }
+    .btn_action {
+      background-color: #4A4A4A;
+      color: #fff;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      border: 2px solid #4A4A4A;
+    }
+  }
+}
+
+@media only screen and (min-width: 900px) {
+  .form_column {
+      float: left;
+      width: 48%;
+      padding-top: 30px;
+  }
+  .bot_column {
+    float: right;
+    width: 48%;
+    // background: url(../img/Login_Bot_graphic.png) no-repeat center center;
+    min-height: 260px;
+    min-width: 300px;
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "products":[
+     {
+        "availableSizes":[
+           "Mobiles",
+           "Others"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"4 MSL",
+        "id":12,
+        "installments":9,
+        "isFav":false,
+        "price":10.9,
+        "sku":"12064273040195392.jpg",
+        "title":"Cat Tee Black T-Shirt"
+     },
+     {
+        "availableSizes":[
+           "Mobiles"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"",
+        "id":13,
+        "installments":5,
+        "isFav":false,
+        "price":29.45,
+        "sku":"51498472915966370.jpg",
+        "title":"Dark Thug Blue-Navy T-Shirt"
+     },
+     {
+        "availableSizes":[
+           "Mobiles",
+           "Desktops",
+           "Servers"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"GPX Poly 1",
+        "id":14,
+        "installments":3,
+        "isFav":false,
+        "price":9,
+        "sku":"10686354557628304.jpg",
+        "title":"Sphynx Tie Dye Wine T-Shirt"
+     },
+     {
+        "availableSizes":[
+           "Mobiles",
+           "Desktops",
+           "Servers",
+           "Others"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"Treino 2014",
+        "id":15,
+        "installments":5,
+        "isFav":false,
+        "price":14,
+        "sku":"11033926921508488.jpg",
+        "title":"Skuul"
+     },
+     {
+        "availableSizes":[
+           "Mobiles",
+           "Servers"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"",
+        "id":11,
+        "installments":3,
+        "isFav":false,
+        "price":13.25,
+        "sku":"39876704341265610.jpg",
+        "title":"Wine Skul T-Shirt"
+     },
+     {
+        "availableSizes":[
+           "Desktops"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"14/15 s/nº",
+        "id":0,
+        "installments":9,
+        "isFav":false,
+        "price":10.9,
+        "sku":"8552515751438644.jpg",
+        "title":"Cat Tee Black T-Shirt"
+     },
+     {
+        "availableSizes":[
+           "Mobiles"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"14/15 s/nº",
+        "id":1,
+        "installments":9,
+        "isFav":false,
+        "price":10.9,
+        "sku":"18644119330491310.jpg",
+        "title":"Sphynx Tie Dye Grey T-Shirt"
+     },
+     {
+        "availableSizes":[
+           "Servers"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"14/15 s/nº",
+        "id":2,
+        "installments":7,
+        "isFav":false,
+        "price":14.9,
+        "sku":"11854078013954528.jpg",
+        "title":"Danger Knife Grey"
+     },
+     {
+        "availableSizes":[
+           "Servers"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"2014 s/nº",
+        "id":3,
+        "installments":7,
+        "isFav":false,
+        "price":14.9,
+        "sku":"876661122392077.jpg",
+        "title":"White DGK Script Tee"
+     },
+     {
+        "availableSizes":[
+           "Others"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"14/15 s/nº - Jogador",
+        "id":4,
+        "installments":12,
+        "isFav":false,
+        "price":25.9,
+        "sku":"9197907543445676.jpg",
+        "title":"Born On The Streets"
+     },
+     {
+        "availableSizes":[
+           "Mobiles",
+           "Others"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"14/15 + Camiseta 1º Mundial",
+        "id":5,
+        "installments":9,
+        "isFav":false,
+        "price":10.9,
+        "sku":"10547961582846888.jpg",
+        "title":"Tso 3D Short Sleeve T-Shirt A"
+     },
+     {
+        "availableSizes":[
+           "Others"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"Goleiro 13/14",
+        "id":6,
+        "installments":0,
+        "isFav":false,
+        "price":49.9,
+        "sku":"6090484789343891.jpg",
+        "title":"Man Tie Dye Cinza Grey T-Shirt"
+     },
+     {
+        "availableSizes":[
+           "Servers"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"1977 Infantil",
+        "id":7,
+        "installments":4,
+        "isFav":false,
+        "price":22.5,
+        "sku":"18532669286405344.jpg",
+        "title":"Crazy Monkey Black T-Shirt"
+     },
+     {
+        "availableSizes":[
+           "Others"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"",
+        "id":8,
+        "installments":4,
+        "isFav":false,
+        "price":18.7,
+        "sku":"5619496040738316.jpg",
+        "title":"Tso 3D Black T-Shirt"
+     },
+     {
+        "availableSizes":[
+           "Mobiles"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"",
+        "id":9,
+        "installments":5,
+        "isFav":false,
+        "price":134.9,
+        "sku":"11600983276356164.jpg",
+        "title":"Crazy Monkey Grey"
+     },
+     {
+        "availableSizes":[
+           "Others"
+        ],
+        "currencyFormat":"$",
+        "currencyId":"USD",
+        "description":"",
+        "id":10,
+        "installments":9,
+        "isFav":false,
+        "price":49,
+        "sku":"27250082398145996.jpg",
+        "title":"On The Streets Black T-Shirt"
+     }
+  ]
+}
