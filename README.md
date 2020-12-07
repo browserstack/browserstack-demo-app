@@ -37,19 +37,3 @@ yarn dev
 ```
 
 visit `http://localhost:3000/`
-
-### Installation with docker
-
-First, Install docker:
-
-```bash
-https://docs.docker.com/engine/install/
-```
-
-### Run the app
-
-```shell
-docker build -t client . && docker run --name CLIENT_CONTAINER -p 0.0.0.0:5000:3000 client
-```
-
-visit `http://localhost:5000/`
