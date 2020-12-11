@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { updateFilters } from '../../../services/filters/actions';
 import Checkbox from '../../CheckBox';
 
-const availableSizes = ['Mobiles', 'Desktops', 'Servers', 'Others'];
+const availableSizes = ['Apple', 'Samsung', 'Google', 'OnePlus'];
 
 import './style.scss';
 
@@ -55,7 +55,7 @@ class Filter extends Component {
     }
     return (
       <div className="filters">
-        <h4 className="title">Devices:</h4>
+        <h4 className="title">Vendors:</h4>
         {this.createCheckboxes()}
       </div>
     );

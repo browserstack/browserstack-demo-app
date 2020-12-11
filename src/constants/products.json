@@ -2,235 +2,353 @@
   "products":[
      {
         "availableSizes":[
-           "Mobiles",
-           "Others"
+           "Apple"
         ],
         "currencyFormat":"$",
         "currencyId":"USD",
-        "description":"4 MSL",
-        "id":12,
-        "installments":9,
-        "isFav":false,
-        "price":10.9,
-        "sku":"12064273040195392.jpg",
-        "title":"Cat Tee Black T-Shirt"
-     },
-     {
-        "availableSizes":[
-           "Mobiles"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"",
-        "id":13,
-        "installments":5,
-        "isFav":false,
-        "price":29.45,
-        "sku":"51498472915966370.jpg",
-        "title":"Dark Thug Blue-Navy T-Shirt"
-     },
-     {
-        "availableSizes":[
-           "Mobiles",
-           "Desktops",
-           "Servers"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"GPX Poly 1",
-        "id":14,
-        "installments":3,
-        "isFav":false,
-        "price":9,
-        "sku":"10686354557628304.jpg",
-        "title":"Sphynx Tie Dye Wine T-Shirt"
-     },
-     {
-        "availableSizes":[
-           "Mobiles",
-           "Desktops",
-           "Servers",
-           "Others"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"Treino 2014",
-        "id":15,
-        "installments":5,
-        "isFav":false,
-        "price":14,
-        "sku":"11033926921508488.jpg",
-        "title":"Skuul"
-     },
-     {
-        "availableSizes":[
-           "Mobiles",
-           "Servers"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"",
-        "id":11,
-        "installments":3,
-        "isFav":false,
-        "price":13.25,
-        "sku":"39876704341265610.jpg",
-        "title":"Wine Skul T-Shirt"
-     },
-     {
-        "availableSizes":[
-           "Desktops"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"14/15 s/nº",
-        "id":0,
-        "installments":9,
-        "isFav":false,
-        "price":10.9,
-        "sku":"8552515751438644.jpg",
-        "title":"Cat Tee Black T-Shirt"
-     },
-     {
-        "availableSizes":[
-           "Mobiles"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"14/15 s/nº",
+        "description":"iPhone 12",
         "id":1,
         "installments":9,
         "isFav":false,
-        "price":10.9,
-        "sku":"18644119330491310.jpg",
-        "title":"Sphynx Tie Dye Grey T-Shirt"
+        "price":799,
+        "sku":"iPhone12-device-info.png",
+        "title":"iPhone 12"
      },
      {
-        "availableSizes":[
-           "Servers"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"14/15 s/nº",
-        "id":2,
-        "installments":7,
-        "isFav":false,
-        "price":14.9,
-        "sku":"11854078013954528.jpg",
-        "title":"Danger Knife Grey"
-     },
-     {
-        "availableSizes":[
-           "Servers"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"2014 s/nº",
-        "id":3,
-        "installments":7,
-        "isFav":false,
-        "price":14.9,
-        "sku":"876661122392077.jpg",
-        "title":"White DGK Script Tee"
-     },
-     {
-        "availableSizes":[
-           "Others"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"14/15 s/nº - Jogador",
-        "id":4,
-        "installments":12,
-        "isFav":false,
-        "price":25.9,
-        "sku":"9197907543445676.jpg",
-        "title":"Born On The Streets"
-     },
-     {
-        "availableSizes":[
-           "Mobiles",
-           "Others"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"14/15 + Camiseta 1º Mundial",
-        "id":5,
-        "installments":9,
-        "isFav":false,
-        "price":10.9,
-        "sku":"10547961582846888.jpg",
-        "title":"Tso 3D Short Sleeve T-Shirt A"
-     },
-     {
-        "availableSizes":[
-           "Others"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"Goleiro 13/14",
-        "id":6,
-        "installments":0,
-        "isFav":false,
-        "price":49.9,
-        "sku":"6090484789343891.jpg",
-        "title":"Man Tie Dye Cinza Grey T-Shirt"
-     },
-     {
-        "availableSizes":[
-           "Servers"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"1977 Infantil",
-        "id":7,
-        "installments":4,
-        "isFav":false,
-        "price":22.5,
-        "sku":"18532669286405344.jpg",
-        "title":"Crazy Monkey Black T-Shirt"
-     },
-     {
-        "availableSizes":[
-           "Others"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"",
-        "id":8,
-        "installments":4,
-        "isFav":false,
-        "price":18.7,
-        "sku":"5619496040738316.jpg",
-        "title":"Tso 3D Black T-Shirt"
-     },
-     {
-        "availableSizes":[
-           "Mobiles"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"",
-        "id":9,
-        "installments":5,
-        "isFav":false,
-        "price":134.9,
-        "sku":"11600983276356164.jpg",
-        "title":"Crazy Monkey Grey"
-     },
-     {
-        "availableSizes":[
-           "Others"
-        ],
-        "currencyFormat":"$",
-        "currencyId":"USD",
-        "description":"",
-        "id":10,
-        "installments":9,
-        "isFav":false,
-        "price":49,
-        "sku":"27250082398145996.jpg",
-        "title":"On The Streets Black T-Shirt"
-     }
+      "availableSizes":[
+         "Apple"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"iPhone 12 Mini",
+      "id":2,
+      "installments":9,
+      "isFav":false,
+      "price":699,
+      "sku":"iPhone12-device-info.png",
+      "title":"iPhone 12 Mini"
+   },
+   {
+      "availableSizes":[
+         "Apple"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"iPhone 12 Pro Max",
+      "id":3,
+      "installments":9,
+      "isFav":false,
+      "price":1099,
+      "sku":"iPhone12-device-info.png",
+      "title":"iPhone 12 Pro Max"
+   },
+   {
+      "availableSizes":[
+         "Apple"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"iPhone 12 Pro ",
+      "id":4,
+      "installments":5,
+      "isFav":false,
+      "price":999,
+      "sku":"iPhone12Pro-device-info.png",
+      "title":"iPhone 12 Pro "
+   },
+   {
+      "availableSizes":[
+         "Apple"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"iPhone 11",
+      "id":5,
+      "installments":8,
+      "isFav":false,
+      "price":599,
+      "sku":"iPhone11-device-info.png",
+      "title":"iPhone 11"
+   },
+   {
+      "availableSizes":[
+         "Apple"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"iPhone 11 Pro",
+      "id":6,
+      "installments":3,
+      "isFav":false,
+      "price":699,
+      "sku":"infocardiphone11Pro.png",
+      "title":"iPhone 11 Pro"
+   },
+   {
+      "availableSizes":[
+         "Apple"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"iPhone XS",
+      "id":7,
+      "installments":4,
+      "isFav":false,
+      "price":549,
+      "sku":"infocard.png",
+      "title":"iPhone XS"
+   },
+   {
+      "availableSizes":[
+         "Apple"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"iPhone XR",
+      "id":8,
+      "installments":5,
+      "isFav":false,
+      "price":499,
+      "sku":"infoiphoneXR.png",
+      "title":"iPhone XR"
+   },
+   {
+      "availableSizes":[
+         "Apple"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"iPhone XS Max",
+      "id":9,
+      "installments":7,
+      "isFav":false,
+      "price":649,
+      "sku":"infocard.png",
+      "title":"iPhone XS Max"
+   },
+   {
+      "availableSizes":[
+         "Samsung"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"Galaxy S20",
+      "id":10,
+      "installments":9,
+      "isFav":false,
+      "price":999,
+      "sku":"samsung-S20-device-info.png",
+      "title":"Galaxy S20"
+   },
+   {
+      "availableSizes":[
+         "Samsung"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"Galaxy S20+",
+      "id":11,
+      "installments":9,
+      "isFav":false,
+      "price":1199,
+      "sku":"samsung-S20+-device-info.png",
+      "title":"Galaxy S20+"
+   },
+   {
+      "availableSizes":[
+         "Samsung"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"Galaxy S20 Ultra",
+      "id":12,
+      "installments":12,
+      "isFav":false,
+      "price":1399,
+      "sku":"samsung-S20Ultra-device-info.png",
+      "title":"Galaxy S20 Ultra"
+   },
+   {
+      "availableSizes":[
+         "Samsung"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"Galaxy S10",
+      "id":13,
+      "installments":5,
+      "isFav":false,
+      "price":899,
+      "sku":"samsung-S10-device-info.png",
+      "title":"Galaxy S10"
+   },
+   {
+      "availableSizes":[
+         "Samsung"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"Galaxy S9",
+      "id":14,
+      "installments":5,
+      "isFav":false,
+      "price":699,
+      "sku":"samsung-s9-device-info.png",
+      "title":"Galaxy S9"
+   },
+   {
+      "availableSizes":[
+         "Samsung"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"Galaxy Note 20",
+      "id":15,
+      "installments":7,
+      "isFav":false,
+      "price":999,
+      "sku":"Note20-device-info.png",
+      "title":"Galaxy Note 20"
+   },
+   {
+      "availableSizes":[
+         "Samsung"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"Galaxy Note 20 Ultra",
+      "id":16,
+      "installments":7,
+      "isFav":false,
+      "price":1299,
+      "sku":"Note20Ultra-device-info.png",
+      "title":"Galaxy Note 20 Ultra"
+   },
+   {
+      "availableSizes":[
+         "Google"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"Pixel 4",
+      "id":17,
+      "installments":5,
+      "isFav":false,
+      "price":899,
+      "sku":"GooglePixel4-device-info.png",
+      "title":"Pixel 4"
+   },
+   {
+      "availableSizes":[
+         "Google"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"Pixel 3",
+      "id":18,
+      "installments":5,
+      "isFav":false,
+      "price":599,
+      "sku":"GooglePixel3-device-info.png",
+      "title":"Pixel 3"
+   },
+   {
+      "availableSizes":[
+         "Google"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"Pixel 2",
+      "id":19,
+      "installments":3,
+      "isFav":false,
+      "price":399,
+      "sku":"device-info.jpg",
+      "title":"Pixel 2"
+   },
+   {
+      "availableSizes":[
+         "OnePlus"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"One Plus 8",
+      "id":20,
+      "installments":6,
+      "isFav":false,
+      "price":799,
+      "sku":"OnePlus8-device-info.png",
+      "title":"One Plus 8"
+   },
+   {
+      "availableSizes":[
+         "OnePlus"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"One Plus 8T",
+      "id":21,
+      "installments":6,
+      "isFav":false,
+      "price":899,
+      "sku":"OnePlus8-device-info.png",
+      "title":"One Plus 8T"
+   },
+   {
+      "availableSizes":[
+         "OnePlus"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"One Plus 8 Pro",
+      "id":22,
+      "installments":6,
+      "isFav":false,
+      "price":899,
+      "sku":"OnePlus8-device-info.png",
+      "title":"One Plus 8 Pro"
+   },
+   {
+      "availableSizes":[
+         "OnePlus"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"One Plus 7T",
+      "id":23,
+      "installments":6,
+      "isFav":false,
+      "price":599,
+      "sku":"OnePlus7T-DeviceInfo.png",
+      "title":"One Plus 7T"
+   },
+   {
+      "availableSizes":[
+         "OnePlus"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"One Plus 7",
+      "id":24,
+      "installments":3,
+      "isFav":false,
+      "price":499,
+      "sku":"oneplus7device-info.png",
+      "title":"One Plus 7"
+   },
+   {
+      "availableSizes":[
+         "OnePlus"
+      ],
+      "currencyFormat":"$",
+      "currencyId":"USD",
+      "description":"One Plus 6T",
+      "id":25,
+      "installments":3,
+      "isFav":false,
+      "price":429,
+      "sku":"Oneplus6T_infocard.png",
+      "title":"One Plus 6T"
+   }
   ]
 }

@@ -56,7 +56,7 @@ const Product = props => {
       </div>
       <Thumb
         classes="shelf-item__thumb"
-        src={isImageNotLoadingUser(username) ? '' : require(`../../../../public/static/${product.sku}`)}
+        src={isImageNotLoadingUser(username) ? '' : product.sku && require(`../../../../public/static/${product.sku}`)}
         alt={product.title}
       />
       <p className="shelf-item__title">{product.title}</p>
