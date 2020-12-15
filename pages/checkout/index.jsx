@@ -156,7 +156,7 @@ const CheckOut = ({ cartTotal, cartProducts, emptyCart, resetCartTotal }) => {
                   </h3>
                   <ul aria-live="polite" className="productList">
                     {cartProducts.map((cartProduct) => (
-                      <li key={cartProduct.id} className="productList-item is-visible">
+                      <li id={cartProduct.id} key={cartProduct.id} className="productList-item is-visible">
                         <div className="product">
                           <figure className="product-column product-figure">
                             <img alt={cartProduct.title} src={require(`../../public/static/${cartProduct.sku}`)} />

@@ -47,19 +47,20 @@ const Header = () => {
             </Link>
             <nav className="space-x-4 ml-6">
               <Link href="/offers">
-                <a className="Navbar_link__3Blki">Offers</a>
+                <a id="offers" className="Navbar_link__3Blki">Offers</a>
               </Link>
               <Link href="/orders">
-                <a className="Navbar_link__3Blki">Orders</a>
+                <a id="orders" className="Navbar_link__3Blki">Orders</a>
               </Link>
               <Link href="/favourites">
-                <a className="Navbar_link__3Blki">
+                <a id="favourites" className="Navbar_link__3Blki">
                   Favourites
                 </a>
               </Link>
             </nav>
           </div>
           <div className="flex flex-1 justify-end align-center space-x-8">
+            {userName ? (<span className="username">{userName}</span>) : ''}
             <nav className="UserNav_root__343id align-center pt-1">
               <Link href="/offers">
                 <a onClick={logOutHandler} className="Navbar_link__3Blki logout-link">{userName ? 'Logout' : 'Sign In'}</a>

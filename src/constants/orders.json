@@ -7,39 +7,39 @@
       "deliveryDate": "2 November, 2020",
       "items": [
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
+          "sku":"iPhone12-device-info.png",
+          "title":"iPhone 12",
           "id": 5,
           "price": 10,
-          "description":"4 MSL"
+          "description":"iPhone 12"
         },
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
+          "sku":"iPhone12-device-info.png",
+          "title":"iPhone 12 Pro Max",
           "id": 6,
           "price": 10,
-          "description":"4 MSL"
+          "description":"iPhone 12 Pro Max"
         },
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
+          "sku":"iPhone11-device-info.png",
+          "title":"iPhone 11",
           "id": 7,
           "price": 10,
-          "description":"4 MSL"
+          "description":"iPhone 11"
         },
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
+          "sku":"samsung-S20+-device-info.png",
+          "title":"Galaxy S20+",
           "id": 6,
           "price": 10,
-          "description":"4 MSL"
+          "description":"Galaxy S20+"
         },
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
+          "sku":"GooglePixel3-device-info.png",
+          "title":"Pixel 3",
           "id": 7,
           "price": 10,
-          "description":"4 MSL"
+          "description":"Pixel 3"
         }
       ]
     },
@@ -50,25 +50,25 @@
       "deliveryDate": "2 November, 2020",
       "items": [
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
+          "sku":"GooglePixel3-device-info.png",
+          "title":"Pixel 3",
           "id": 5,
           "price": 10,
-          "description":"4 MSL"
+          "description":"Pixel 3"
         },
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
+          "sku":"samsung-s9-device-info.png",
+          "title":"Galaxy S9",
           "id": 6,
           "price": 10,
-          "description":"4 MSL"
+          "description":"Galaxy S9"
         },
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
+          "sku":"OnePlus8-device-info.png",
+          "title":"One Plus 8T",
           "id": 7,
           "price": 10,
-          "description":"4 MSL"
+          "description":"One Plus 8T"
         }
       ]
     },
@@ -79,25 +79,25 @@
       "deliveryDate": "2 November, 2020",
       "items": [
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
-          "id": 5,
+          "sku":"samsung-s9-device-info.png",
+          "title":"Galaxy S9",
+          "id": 8,
           "price": 10,
-          "description":"4 MSL"
+          "description":"Galaxy S9"
         },
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
-          "id": 6,
+          "sku":"OnePlus8-device-info.png",
+          "title":"One Plus 8 Pro",
+          "id": 9,
           "price": 10,
-          "description":"4 MSL"
+          "description":"One Plus 8 Pro"
         },
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
-          "id": 7,
+          "sku":"infocard.png",
+          "title":"iPhone XS Max",
+          "id": 10,
           "price": 10,
-          "description":"4 MSL"
+          "description":"iPhone XS Max"
         }
       ]
     },
@@ -108,25 +108,25 @@
       "deliveryDate": "2 November, 2020",
       "items": [
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
-          "id": 5,
+          "sku":"iPhone12Pro-device-info.png",
+          "title":"iPhone 12 Pro",
+          "id": 11,
           "price": 10,
-          "description":"4 MSL"
+          "description":"iPhone 12 Pro"
         },
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
-          "id": 6,
+          "sku":"Note20-device-info.png",
+          "title":"Galaxy Note 20",
+          "id": 12,
           "price": 10,
-          "description":"4 MSL"
+          "description":"Galaxy Note 20"
         },
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
-          "id": 7,
+          "sku":"GooglePixel4-device-info.png",
+          "title":"Pixel 4",
+          "id": 13,
           "price": 10,
-          "description":"4 MSL"
+          "description":"Pixel 4"
         }
       ]
     },
@@ -137,25 +137,25 @@
       "deliveryDate": "2 November, 2020",
       "items": [
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
-          "id": 5,
+          "sku":"OnePlus8-device-info.png",
+          "title":"One Plus 8",
+          "id": 14,
           "price": 10,
-          "description":"4 MSL"
+          "description":"One Plus 8"
         },
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
-          "id": 6,
+          "sku":"Note20Ultra-device-info.png",
+          "title":"Galaxy Note 20 Ultra",
+          "id": 15,
           "price": 10,
-          "description":"4 MSL"
+          "description":"Galaxy Note 20 Ultra"
         },
         {
-          "sku":"12064273040195392.jpg",
-          "title":"Cat Tee Black T-Shirt",
-          "id": 7,
+          "sku":"infocardiphone11Pro.png",
+          "title":"iPhone 11 Pro",
+          "id": 16,
           "price": 10,
-          "description":"4 MSL"
+          "description":"iPhone 11 Pro"
         }
       ]
     }

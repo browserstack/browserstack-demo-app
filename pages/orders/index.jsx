@@ -58,7 +58,7 @@ const Orders = ({ }) => {
                 <h2 className="pt-6 text-2xl font-bold tracking-wide text-center">No orders found</h2>
               </>
             ) : orders.map((order) => (
-              <div key={order.id} className="a-box-group a-spacing-base order">
+              <div id={order.id} key={order.id} className="a-box-group a-spacing-base order">
                 <div className="a-box a-color-offset-background order-info">
                   <div className="a-box-inner">
                     <div className="a-fixed-right-grid">
@@ -120,7 +120,7 @@ const Orders = ({ }) => {
                     </div>
                     <div className="a-fixed-right-grid a-spacing-top-medium" style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
                       {order.items.map((item) => (
-                        <div key={`${order.id}-${item.id}`} className="a-fixed-right-grid-inner a-grid-vertical-align a-grid-top" style={{width: 'auto'}}>
+                        <div id={`${order.id}-${item.id}`} key={`${order.id}-${item.id}`} className="a-fixed-right-grid-inner a-grid-vertical-align a-grid-top" style={{width: 'auto'}}>
                           <div className="a-fixed-right-grid-col a-col-left">
                             <div className="a-row">
                               <div className="a-fixed-left-grid a-spacing-none">
