@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import store2 from 'store2';
 import Router from 'next/router';
 import { connect } from 'react-redux';
+import {
+  isFirefox,
+  browserVersion
+} from "react-device-detect";
 
 import { setFavProduct } from '../../../services/shelf/actions';
 
@@ -15,7 +19,6 @@ import util from '../../../services/util';
 const Product = props => {
   const { product, setFavProduct } = props;
   let username = store2.session.get('username');
-
   product.quantity = 1;
 
   let formattedPrice = util.formatPrice(product.price, product.currencyId);
@@ -46,6 +49,13 @@ const Product = props => {
     }
   };
 
+  const clickHandler = () => {
+    // Bug for demonstration
+    if (!(isFirefox && browserVersion == 50)) {
+      props.addProduct(product)
+    }
+  };
+
   return (
     <div
       className="shelf-item"
@@ -69,7 +79,7 @@ const Product = props => {
         </div>
         {productInstallment}
       </div>
-      <div onClick={() => props.addProduct(product)} className="shelf-item__buy-btn">Add to cart</div>
+      <div onClick={clickHandler} className="shelf-item__buy-btn">Add to cart</div>
     </div>
   );
 };
