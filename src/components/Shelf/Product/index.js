@@ -50,6 +50,7 @@ const Product = props => {
   };
 
   const clickHandler = () => {
+    // Bug for demonstration
     if (!(isFirefox && browserVersion == 50)) {
       props.addProduct(product)
     }
