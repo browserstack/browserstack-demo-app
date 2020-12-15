@@ -1,14 +1,14 @@
 {
   "iphone": {
     "title": "30% off on iPhones",
-    "imageId": "12064273040195392.jpg"
+    "imageId": "iPhone12-device-info.png"
   },
   "dekstop": {
-    "title": "20% off on Desktops",
-    "imageId": "12064273040195392.jpg"
+    "title": "20% off on OnePlus",
+    "imageId": "OnePlus8-device-info.png"
   },
   "shipping": {
     "title": "Free Shipping",
-    "imageId": "12064273040195392.jpg"
+    "imageId": "free-shipping-transparent-6.png"
   }
 }

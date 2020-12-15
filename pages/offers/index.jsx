@@ -70,7 +70,7 @@ const Offers = () => {
                 </div>
                 <div className="pt-6 text-2xl font-bold tracking-wide text-center text-red-50 offers-listing">
                     {Object.keys(offers).map((offer) => (
-                      <div key={offer} className="offer">
+                      <div id={offer} key={offer} className="offer">
                         <img style={{height: '150px'}} alt={offer} src={require(`../../public/static/${offers[offer].imageId}`)} />
                         <div className="offer-title">{offers[offer].title}</div>
                       </div>

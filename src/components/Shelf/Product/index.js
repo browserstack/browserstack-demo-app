@@ -50,6 +50,7 @@ const Product = props => {
     <div
       className="shelf-item"
       data-sku={product.sku}
+      id={product.id}
     >
       <div className="shelf-stopper">
         <FavouriteButton onClick={favClickHandler} isFavourited={product.isFav} />
