@@ -55,6 +55,7 @@ const Offers = () => {
       <Head>
         <title>StackDemo</title>
         <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml"/>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Header />
       <main className="fit">
@@ -68,7 +69,7 @@ const Offers = () => {
                 <div className="p-6 text-2xl tracking-wide text-center text-red-50">
                   We've promotional offers in your location.
                 </div>
-                <div className="pt-6 text-2xl font-bold tracking-wide text-center text-red-50 offers-listing">
+                <div className="pt-6 text-2xl font-bold tracking-wide text-center text-red-50 offers-listing justify-center">
                     {Object.keys(offers).map((offer) => (
                       <div id={offer} key={offer} className="offer">
                         <img style={{height: '150px'}} alt={offer} src={require(`../../public/static/${offers[offer].imageId}`)} />

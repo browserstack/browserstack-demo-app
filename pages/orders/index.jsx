@@ -41,11 +41,12 @@ const Orders = ({ }) => {
       <Head>
         <title>StackDemo</title>
         <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml"/>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Header />
       <main className="fit">
         <div className="mx-auto max-w-8xl px-6">
-          <div className="flex-1 p-10 flex flex-col justify-center items-center ">
+          <div className="flex-1 p-10 flex flex-col justify-center items-center orders-listing">
             {orders.length === 0 ? (
               <>
                 <span className="border border-dashed border-secondary rounded-full flex items-center justify-center w-16 h-16 p-12 bg-primary text-primary">

@@ -10,7 +10,7 @@ class App extends Component {
     return (
       <div className="App">
         <Header />
-        <main style={{display: 'flex', padding: '20px 2%', margin: '0 auto 0'}}>
+        <main style={{padding: '20px 2%', margin: '0 auto 0'}}>
           <Shelf />
         </main>
         <FloatCart />

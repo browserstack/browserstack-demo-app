@@ -50,6 +50,7 @@ const SignIn = () => {
       <Head>
         <title>StackDemo</title>
         <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml"/>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="login_logo"></div>
       <div className="login_wrapper">
