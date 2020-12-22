@@ -70,6 +70,7 @@ const CheckOut = ({ cartTotal, cartProducts, emptyCart, resetCartTotal }) => {
       <Head>
         <title>StackDemo</title>
         <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml"/>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="checkoutHeader optimizedCheckout-header">
         <div className="checkoutHeader-content">
@@ -82,7 +83,7 @@ const CheckOut = ({ cartTotal, cartProducts, emptyCart, resetCartTotal }) => {
       </div>
       <div id="checkout-app">
         <div className="layout optimizedCheckout-contentPrimary">
-          <div>
+          <div className="main-checkout-layout">
             <div className="layout-main">
               <ol className="checkout-steps">
                 <li className="checkout-step optimizedCheckout-checkoutStep checkout-step--shipping">
@@ -125,7 +126,7 @@ const CheckOut = ({ cartTotal, cartProducts, emptyCart, resetCartTotal }) => {
                                     <div className="dynamic-form-field dynamic-form-field--postCode">
                                       <div className="form-field">
                                         <label for="postCodeInput" className="form-label optimizedCheckout-form-label">Postal Code</label>
-                                        <input required autoComplete="postal-code" id="provinceInput" className='form-input optimizedCheckout-form-input' type="text" defaultValue="" />
+                                        <input required autoComplete="postal-code" id="postCodeInput" className='form-input optimizedCheckout-form-input' type="text" defaultValue="" />
                                       </div>
                                     </div>
                                   </div>

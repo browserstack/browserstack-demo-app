@@ -45,7 +45,7 @@ const Header = () => {
                 </svg>
               </a>
             </Link>
-            <nav className="space-x-4 ml-6">
+            <nav className="space-x-4 ml-6" style={{ display: 'flex' }}>
               <Link href="/offers">
                 <a id="offers" className="Navbar_link__3Blki">Offers</a>
               </Link>

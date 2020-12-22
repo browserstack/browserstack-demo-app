@@ -28,6 +28,7 @@ const CheckOut = ({ cartTotal }) => {
       <Head>
         <title>StackDemo</title>
         <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml"/>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="checkoutHeader optimizedCheckout-header">
         <div className="checkoutHeader-content">
@@ -40,7 +41,7 @@ const CheckOut = ({ cartTotal }) => {
       </div>
       <div id="checkout-app">
         <div className="layout optimizedCheckout-contentPrimary">
-          <div>
+          <div className="main-checkout-layout">
             <div className="layout-main">
               <ol className="checkout-steps">
                 <li className="checkout-step optimizedCheckout-checkoutStep checkout-step--shipping">

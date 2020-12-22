@@ -5,13 +5,14 @@
 
   .checkoutHeader-content {
     margin: 0 120px;
-    margin-left: 106px;
+    margin-left: 5%;
     max-width: 92.30769rem;
     width: 100%;
     padding: 2rem;
 
     .checkoutHeader-heading {
       font-size: 2.76923rem;
+      text-align: left;
       color: inherit;
       margin: 0;
       word-wrap: break-word;
@@ -108,6 +109,12 @@
                   margin: 0;
                   padding-right: 1.5rem;
                   width: 25%;
+
+                  img {
+                    height: auto;
+                    max-width: 90px;
+                    margin-left: -18px;
+                  }
                 }
                 .product-actions {
                   align-self: flex-start;
@@ -491,6 +498,21 @@
   }
   .form-actions {
     text-align: left;
+  }
+}
+
+@media only screen and (max-width: 750px) {
+  .main-checkout-layout {
+    display: flex;
+    flex-flow: column;
+
+    .layout-main {
+      width: 100% !important;
+    }
+
+    .layout-cart {
+      width: 100% !important;
+    }
   }
 }
 
