@@ -18,6 +18,9 @@ import util from '../../../services/util';
 
 const Product = props => {
   const { product, setFavProduct } = props;
+  const isFirefox50 = isFirefox && browserVersion == 50;
+  // Bug: Hide first product image for firefox 50
+  const hideFirstProductImageForFirefox50 = product.id === 1 && isFirefox50;
   let username = store2.session.get('username');
   product.quantity = 1;
 
@@ -67,7 +70,7 @@ const Product = props => {
       </div>
       <Thumb
         classes="shelf-item__thumb"
-        src={isImageNotLoadingUser(username) ? '' : product.sku && require(`../../../../public/static/${product.sku}`)}
+        src={isImageNotLoadingUser(username) || hideFirstProductImageForFirefox50 ? '' : product.sku && require(`../../../../public/static/${product.sku}`)}
         alt={product.title}
       />
       <p className="shelf-item__title">{product.title}</p>
