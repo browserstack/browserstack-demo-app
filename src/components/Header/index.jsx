@@ -47,14 +47,14 @@ const Header = () => {
             </Link>
             <nav className="space-x-4 ml-6" style={{ display: 'flex' }}>
               <Link href="/offers">
-                <a id="offers" className="Navbar_link__3Blki">Offers</a>
+                <a id="offers" className="Navbar_link__3Blki"><strong>Offers</strong></a>
               </Link>
               <Link href="/orders">
-                <a id="orders" className="Navbar_link__3Blki">Orders</a>
+                <a id="orders" className="Navbar_link__3Blki"><strong>Orders</strong></a>
               </Link>
               <Link href="/favourites">
                 <a id="favourites" className="Navbar_link__3Blki">
-                  Favourites
+                  <strong>Favourites</strong>
                 </a>
               </Link>
             </nav>

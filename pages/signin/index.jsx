@@ -2,25 +2,79 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import store2 from 'store2';
 import Router from 'next/router';
+import Creatable from 'react-select/creatable';
 import axios from '../../src/services/axios';
 import './style.scss';
+
+const usernameOptions = [
+  {
+    label: 'Accepted usernames are', 
+    options: [
+      { value: 'demouser', label: 'demouser' },
+      { value: 'image_not_loading_user', label: 'image_not_loading_user' },
+      { value: 'existing_orders_user', label: 'existing_orders_user' },
+      { value: 'fav_user', label: 'fav_user' },
+      { value: 'locked_user', label: 'locked_user' }
+    ]
+  }
+];
+
+const passwordOptions = [
+  {
+    label: 'Password for all users',
+    options: [{ value: 'testingisfun99', label: 'testingisfun99' }]
+  }
+];
+
+const groupStyles = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+};
+
+const groupBadgeStyles = {
+  backgroundColor: '#EBECF0',
+  borderRadius: '2em',
+  color: '#172B4D',
+  display: 'inline-block',
+  fontSize: 12,
+  fontWeight: 'normal',
+  lineHeight: '1',
+  minWidth: 1,
+  padding: '0.16666666666667em 0.5em',
+  textAlign: 'center',
+};
+
+
+const formatGroupLabel = data => (
+  <div style={groupStyles}>
+    <span>{data.label}</span>
+    <span style={groupBadgeStyles}>{data.options.length}</span>
+  </div>
+);
 
 const SignIn = () => {
   const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [apiError, setApiError] = useState('');
-
+  console.log(userName);
   const userSession = store2.session.get('username');
   if (userSession) {
     Router.replace('/');
     return <></>;
   }
 
+  const handleChange = selectedOption => {
+    console.log('in handle change', selectedOption.value);
+    setUsername(selectedOption.value);
+  };
+
   useEffect(() => {
     setApiError('');
   }, [setApiError]);
 
   const formHandler = e => {
+    console.log('form hand;er', userName, password);
     e.preventDefault();
     setApiError('');
     axios.post('/api/signin', {
@@ -80,8 +134,20 @@ const SignIn = () => {
               </svg>
             </div>
             <div className="flex flex-col space-y-3">
-              <input required type="text" className="form_input Input_root__2vmVG" data-test="username" id="user-name" placeholder="Username" autoCorrect="off" value={userName} onChange={(e) => setUsername(e.target.value)} />
-              <input required type="password" className="form_input Input_root__2vmVG" data-test="password" id="password" placeholder="Password" autoCorrect="off" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <Creatable
+                id="user-name"
+                onChange={handleChange}
+                placeholder="Select Username"
+                options={usernameOptions}
+                formatGroupLabel={formatGroupLabel}
+              />
+              <Creatable
+                id="password"
+                onChange={(option) => setPassword(option.value)}
+                placeholder="Select Password"
+                options={passwordOptions}
+                formatGroupLabel={formatGroupLabel}
+              />
               <button type="submit" className="Button_root__24MxS Button_slim__2caxo" defaultValue="LOGIN">Log In</button>
               {apiError && <h3 className="api-error">{apiError}</h3>}
             </div>
