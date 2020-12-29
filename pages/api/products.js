@@ -13,6 +13,8 @@ export default (req, res) => {
       ...itm
     }))});
   } else {
+    const products = productsData.products;
+    products.map(product => product.isFav = false);
     res.statusCode = 200;
     res.json(productsData);
   }
