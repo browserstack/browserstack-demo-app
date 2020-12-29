@@ -1,4 +1,4 @@
-const validUsers = ['image_not_loading_user', 'existing_orders_user', 'fav_user'];
+const validUsers = ['image_not_loading_user', 'existing_orders_user', 'fav_user', 'demouser'];
 const validPassword = 'testingisfun99';
 export const isValidUser = user => validUsers.indexOf(user) >= 0;
 export const isValidPassword = password => validPassword === password;

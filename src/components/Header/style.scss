@@ -33,14 +33,15 @@
   .Navbar_link__3Blki {
     display: inline-flex;
     align-items: center;
-    color: var(--text-primary);
+    padding: 0 16px;
+    font-size: 16px;
+    color: #000;
     line-height: 1.5rem;
     font-weight: 500;
     transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,transform;
     transition-timing-function: cubic-bezier(.4,0,.2,1);
     transition-duration: 75ms;
     cursor: pointer;
-    color: rgb(134, 142, 150);
   }
   .logout-link {
     color: #333;
@@ -53,5 +54,15 @@
     font-weight: 500 !important;
     align-items: center;
     text-transform: capitalize !important;
+  }
+}
+
+@media only screen and (max-width: 750px) {
+  .Navbar_root__2kbI9 {
+
+    .Navbar_link__3Blki {
+      padding: 0 !important;
+      font-size: 12px;
+    }
   }
 }
