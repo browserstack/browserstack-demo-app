@@ -57,7 +57,6 @@ const SignIn = () => {
   const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [apiError, setApiError] = useState('');
-  console.log(userName);
   const userSession = store2.session.get('username');
   if (userSession) {
     Router.replace('/');
@@ -65,7 +64,6 @@ const SignIn = () => {
   }
 
   const handleChange = selectedOption => {
-    console.log('in handle change', selectedOption.value);
     setUsername(selectedOption.value);
   };
 
@@ -74,7 +72,6 @@ const SignIn = () => {
   }, [setApiError]);
 
   const formHandler = e => {
-    console.log('form hand;er', userName, password);
     e.preventDefault();
     setApiError('');
     axios.post('/api/signin', {
