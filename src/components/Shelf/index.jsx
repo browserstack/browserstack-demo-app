@@ -61,7 +61,7 @@ class Shelf extends Component {
     if (window.location.href.indexOf('/favourites') >= 0 && filteredProducts.length !== 0) {
       const products = filteredProducts.filter((product) => product.isFav);
       this.setState({ filteredProducts: products })
-    } else if (filteredProducts.length === 0) {
+    } else if (filteredProducts.length === 0 || window.location.href.indexOf('signin') >= 0) {
       this.setState({ loading: true });
       this.props.fetchProducts(filters, sort, () => {
         this.setState({ loading: false });

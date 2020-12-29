@@ -88,7 +88,10 @@ const SignIn = () => {
       } else if (window.location.search.indexOf('orders') >= 0) {
         Router.replace('/orders');
       } else {
-        Router.replace('/');
+        Router.replace({
+          pathname: '/',
+          query: { signin: 'true' },
+        });
       }
     }).catch((err) => {
       store2.session.remove('username');
