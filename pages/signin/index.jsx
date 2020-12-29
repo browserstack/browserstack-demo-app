@@ -135,7 +135,7 @@ const SignIn = () => {
             </div>
             <div className="flex flex-col space-y-3">
               <Creatable
-                id="user-name"
+                id="username"
                 onChange={handleChange}
                 placeholder="Select Username"
                 options={usernameOptions}
