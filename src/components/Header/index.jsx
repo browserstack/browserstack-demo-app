@@ -63,7 +63,7 @@ const Header = () => {
             {userName ? (<span className="username">{userName}</span>) : ''}
             <nav className="UserNav_root__343id align-center pt-1">
               <Link href="/offers">
-                <a onClick={logOutHandler} className="Navbar_link__3Blki logout-link">{userName ? 'Logout' : 'Sign In'}</a>
+                <a onClick={logOutHandler} className="Navbar_link__3Blki logout-link" id={userName ? "logout" : "signin"}>{userName ? 'Logout' : 'Sign In'}</a>
               </Link>
             </nav>
           </div>

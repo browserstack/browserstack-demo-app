@@ -48,7 +48,7 @@ const CheckOut = ({ cartTotal }) => {
                   <div className="checkout-view-content">
                     <div className="checkout-form">
                       <div className="form-legend-container">
-                        <legend className="form-legend optimizedCheckout-headingSecondary" data-test="shipping-address-heading">Your Order has been successfully placed.</legend>
+                        <legend id="confirmation-message" className="form-legend optimizedCheckout-headingSecondary" data-test="shipping-address-heading">Your Order has been successfully placed.</legend>
                       </div>
                       <div>
                         Your order number is <strong>{Math.floor(Math.random() * 100) + 1}</strong>
