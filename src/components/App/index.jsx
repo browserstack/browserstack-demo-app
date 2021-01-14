@@ -13,7 +13,7 @@ class App extends Component {
 
   componentDidMount() {
     const connection = window.navigator.connection || window.navigator.mozConnection || window.navigator.webkitConnection;
-    const is2gConnection = connection.effectiveType && connection.effectiveType.indexOf('2g') >= 0;
+    const is2gConnection = connection && connection.effectiveType && connection.effectiveType.indexOf('2g') >= 0 || false;
     this.setState({ is2G: is2gConnection });
 
     // Bug: failed request
