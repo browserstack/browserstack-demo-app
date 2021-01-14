@@ -148,7 +148,7 @@ const SignIn = () => {
                 options={passwordOptions}
                 formatGroupLabel={formatGroupLabel}
               />
-              <button type="submit" className="Button_root__24MxS Button_slim__2caxo" defaultValue="LOGIN">Log In</button>
+              <button id="login-btn" type="submit" className="Button_root__24MxS Button_slim__2caxo" defaultValue="LOGIN">Log In</button>
               {apiError && <h3 className="api-error">{apiError}</h3>}
             </div>
           </form>
