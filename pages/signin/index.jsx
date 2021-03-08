@@ -153,21 +153,6 @@ const SignIn = () => {
             </div>
           </form>
         </div>
-        <div className="login_credentials_wrap">
-          <div className="login_credentials_wrap-inner">
-            <div className="login_credentials">
-              <h4><strong>Accepted usernames are:</strong></h4>
-              locked_user<br/>
-              image_not_loading_user<br/>
-              existing_orders_user<br/>
-              fav_user<br/>
-            </div>
-            <div className="login_password">
-              <h4><strong>Password for all users:</strong></h4>
-              testingisfun99
-            </div>
-          </div>
-        </div>
       </div>
     </>
   );
