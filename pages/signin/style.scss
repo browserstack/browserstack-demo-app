@@ -14,6 +14,7 @@
 
   .Modal_modal__3I0HK {
     background-color: #fff;
+    max-width: 400px;
     margin: 0 auto;
     padding: 3rem;
     margin: 0;
@@ -71,32 +72,6 @@
       border-width: 1px;
       border-color: transparent;
       align-items: center;
-    }
-  }
-
-  .login_credentials_wrap {
-    flex: 1;
-    &-inner {
-      background-color: #efefef;
-      overflow: hidden;
-      max-width: 720px;
-      padding: 15px 30px 30px;
-      margin: 0 auto;
-      height: 100%;
-      display: flex;
-      flex-flow: column;
-      border: 2px solid #ededed;
-
-      .login_credentials {
-        float: left;
-        clear: both;
-        line-height: 24px;
-      }
-      .login_password {
-        float: right;
-        margin-top: 50px;
-        line-height: 24px;
-      }
     }
   }
 
