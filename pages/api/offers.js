@@ -31,8 +31,8 @@ export default (req, res) => {
   const citiesKeys = Object.keys(citiesCoords);
   citiesKeys.forEach((cityName) => {
     const cityCoords = citiesCoords[cityName];
-    const hasMatchingLat = latitude >= cityCoords.lat - 3 || latitude <= cityCoords.lat + 3;
-    const hasMatchingLon = longitude >= cityCoords.lon - 3 || longitude <= cityCoords.lon + 3;
+    const hasMatchingLat = latitude >= cityCoords.lat - 3 && latitude <= cityCoords.lat + 3;
+    const hasMatchingLon = longitude >= cityCoords.lon - 3 && longitude <= cityCoords.lon + 3;
     if(hasMatchingLat && hasMatchingLon) {
       city = cityName;
     } 
