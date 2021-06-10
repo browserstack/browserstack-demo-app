@@ -8,31 +8,31 @@ export default (req, res) => {
 
   const citiesCoords = {
     mumbai: {
-      lat: 20,
-      lon: 78
+      lat: 19,
+      lon: 72
     },
     london: {
-      lat: 55,
-      lon: -3
+      lat: 51,
+      lon: 0
     },
     "san francisco": {
       lat: 37,
-      lon: -95
+      lon: -122
     },
     singapore: {
       lat: 1,
       lon: 103
     },
     sydney: {
-      lat: -31,
-      lon: 115
+      lat: -33,
+      lon: 151
     }
   }
   const citiesKeys = Object.keys(citiesCoords);
   citiesKeys.forEach((cityName) => {
     const cityCoords = citiesCoords[cityName];
-    const hasMatchingLat = latitude >= cityCoords.lat - 3 || latitude <= cityCoords.lat + 3;
-    const hasMatchingLon = longitude >= cityCoords.lon - 3 || longitude <= cityCoords.lon + 3;
+    const hasMatchingLat = latitude >= cityCoords.lat - 3 && latitude <= cityCoords.lat + 3;
+    const hasMatchingLon = longitude >= cityCoords.lon - 3 && longitude <= cityCoords.lon + 3;
     if(hasMatchingLat && hasMatchingLon) {
       city = cityName;
     } 
