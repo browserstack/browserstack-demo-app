@@ -1,5 +1,29 @@
 import offersData from '../../src/constants/offers.json';
 
+/**
+ * @swagger
+ * /api/offers:
+ *   get:
+ *     description: Returns all available offers on products.
+ *     parameters:
+ *     - in: query
+ *       name: userName
+ *       required: false
+ *       description:  Name of the signed in user.
+ *     - in: query
+ *       name: latitude
+ *       required: false
+ *       description:  latitude of the location.
+ *     - in: query
+ *       name: longitude
+ *       required: false
+ *       description:  longitude of the location.
+ *     responses:
+ *       200:
+ *         description: List of all offers for a specific location.
+ *       404:
+ *         description: City name could not be determined.
+ */
 export default (req, res) => {
   const userName = req.query['userName'];
   const latitude = parseInt(req.query['latitude'], 10);
@@ -35,7 +59,7 @@ export default (req, res) => {
     const hasMatchingLon = longitude >= cityCoords.lon - 3 && longitude <= cityCoords.lon + 3;
     if(hasMatchingLat && hasMatchingLon) {
       city = cityName;
-    } 
+    }
   });
 
   if (city) {

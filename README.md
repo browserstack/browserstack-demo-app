@@ -37,3 +37,7 @@ yarn dev
 ```
 
 visit `http://localhost:3000/`
+
+### Open Swagger UI
+
+visit `http://localhost:3000/swagger`
