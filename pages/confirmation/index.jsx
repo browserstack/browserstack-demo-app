@@ -23,6 +23,26 @@ const CheckOut = ({ cartTotal }) => {
     return <></>;
   }
 
+  function generatePDF() {
+    const doc = new jsPDF()
+    doc.text('BrowserStack Demo', 14, 20)
+    doc.autoTable({
+      head: [['Brand', 'Type', 'Quantity', 'Price']],
+      body:
+          cartProducts.map(({availableSizes, title, quantity, price}) => {
+            return [
+              availableSizes[0],
+              title,
+              quantity,
+              '$' + parseFloat(price).toFixed(2) + '.00'
+            ]
+          }),
+      startY: 25,
+    })
+    doc.text('Total price: $' + parseFloat(confirmationTotal.totalPrice).toFixed(2), 14, doc.lastAutoTable.finalY + 10)
+    doc.save('confirmation.pdf')
+  }
+
   return (
     <>
       <Head>
@@ -51,7 +71,7 @@ const CheckOut = ({ cartTotal }) => {
                         <legend id="confirmation-message" className="form-legend optimizedCheckout-headingSecondary" data-test="shipping-address-heading">Your Order has been successfully placed.</legend>
                       </div>
                       <div>
-                        Your order number is <strong>{Math.floor(Math.random() * 100) + 1}</strong>
+                        Your order number is <strong>{Math.floor(Math.random() * 100) + 1}</strong>. Download <a className="underline cursor-pointer" onClick={generatePDF}>here</a> an overview of the ordered items.
                       </div>
                     </div>
                   </div>
