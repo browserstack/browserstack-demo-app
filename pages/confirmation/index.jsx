@@ -98,7 +98,7 @@ const CheckOut = ({ cartTotal }) => {
                 </header>
                 <section className="cart-section optimizedCheckout-orderSummary-cartSection">
                   <h3 className="cart-section-heading optimizedCheckout-contentPrimary">
-                    8 Items
+                    {confirmationTotal.productQuantity} item(s)
                   </h3>
                   <ul aria-live="polite" className="productList">
                     {cartProducts.map((cartProduct) => (
