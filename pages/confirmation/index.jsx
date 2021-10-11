@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import store2 from 'store2';
-import { jsPDF } from "jspdf";
+const { jsPDF } = require("jspdf");
 import 'jspdf-autotable'
 import '../checkout/style.scss';
 
