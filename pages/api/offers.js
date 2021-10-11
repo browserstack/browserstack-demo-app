@@ -13,11 +13,11 @@ import offersData from '../../src/constants/offers.json';
  *     - in: query
  *       name: latitude
  *       required: false
- *       description:  latitude of the location.
+ *       description: Latitude of the location.
  *     - in: query
  *       name: longitude
  *       required: false
- *       description:  longitude of the location.
+ *       description: Longitude of the location.
  *     responses:
  *       200:
  *         description: List of all offers for a specific location.
