@@ -73,7 +73,7 @@ const CheckOut = ({ cartTotal }) => {
                         <legend id="confirmation-message" className="form-legend optimizedCheckout-headingSecondary" data-test="shipping-address-heading">Your Order has been successfully placed.</legend>
                       </div>
                       <div>
-                        Your order number is <strong>{Math.floor(Math.random() * 100) + 1}</strong>. Download <a className="underline cursor-pointer" onClick={generatePDF}>here</a> an overview of the ordered items.
+                        Your order number is <strong>{Math.floor(Math.random() * 100) + 1}</strong>. Download <a id="downloadpdf" className="underline cursor-pointer" onClick={generatePDF}>here</a> an overview of the ordered items.
                       </div>
                     </div>
                   </div>
