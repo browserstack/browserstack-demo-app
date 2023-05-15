@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { updateFilters } from '../../../services/filters/actions';
 import Checkbox from '../../CheckBox';
 
-const availableSizes = ['Apple', 'Samsung', 'Google', 'OnePlus'];
+const availableSizes = ['Apple', 'Samsung', 'Google', 'One Plus'];
 
 import './style.scss';
 

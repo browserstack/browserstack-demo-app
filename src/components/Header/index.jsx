@@ -20,6 +20,7 @@ const Header = () => {
 
   return (
     <div className="Navbar_root__2kbI9">
+      <p style={{width:'100%', textAlign:'center', fontSize: '20px'}}>Sample Announcement!!</p>
       <div className="mx-auto max-w-8xl px-6">
         <div className="flex justify-between align-center flex-row py-4 md:py-6 :py-6 relative">
           <div className="flex flex-1 items-center">
@@ -129,7 +130,7 @@ const Header = () => {
               </Link>
               <Link href="/favourites">
                 <a id="favourites" className="Navbar_link__3Blki">
-                  <strong>Favourites</strong>
+                  <strong>Favoured</strong>
                 </a>
               </Link>
             </nav>
