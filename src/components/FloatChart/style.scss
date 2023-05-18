@@ -3,7 +3,7 @@
   top: 0;
   right: -450px;
   width: 450px;
-  height: calc(100% - (75px));
+  height: calc(100% - (85px));
   background-color: #1b1a20;
   box-sizing: border-box;
 
@@ -11,7 +11,7 @@
 
   &--open {
     right: 0;
-    margin-top: 75px;
+    margin-top: 85px;
   }
 
   &__close-btn {
