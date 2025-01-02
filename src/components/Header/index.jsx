@@ -120,26 +120,62 @@ const Header = () => {
                 )}
               </a>
             </Link>
-            <nav className="space-x-4 ml-6" style={{ display: 'flex' }}>
-              <Link href="/offers">
-                <a id="offers" className="Navbar_link__3Blki"><strong>Offers</strong></a>
-              </Link>
-              <Link href="/orders">
-                <a id="orders" className="Navbar_link__3Blki"><strong>Orders</strong></a>
-              </Link>
+            <div className="space-x-4 ml-6 menu" style={{ 
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, auto)',
+              gap: '1rem'
+            }}>
+              {/* Items in reverse DOM order but displayed in original order via grid */}
               <Link href="/favourites">
-                <a id="favourites" className="Navbar_link__3Blki">
+                <a 
+                  id="favourites" 
+                  className="Navbar_link__3Blki menu-item" 
+                  style={{ order: 3 }}
+                >
                   <strong>Favourites</strong>
                 </a>
               </Link>
-            </nav>
+              <Link href="/orders">
+                <a 
+                  id="orders" 
+                  className="Navbar_link__3Blki menu-item"
+                  style={{ order: 2 }}
+ 
+                >
+                  <strong>Orders</strong>
+                </a>
+              </Link>
+              <Link href="/offers">
+                <a 
+                  id="offers" 
+                  className="Navbar_link__3Blki menu-item"
+                  style={{ order: 1 }}
+                >
+                  <strong>Offers</strong>
+                </a>
+              </Link>
+            </div>
           </div>
+          
           <div className="flex flex-1 justify-end align-center space-x-8">
+            <div className="flex items-center">
+              <input
+                type="text"
+                placeholder="Search"
+                className="px-4 py-1 border border-gray-300 rounded-l focus:outline-none"
+                aria-label="Search"
+              />
+              <button 
+                onClick={() => window.location.reload()}
+                className="px-4 py-1 bg-gray-100 border border-l-0 border-gray-300 rounded-r hover:bg-gray-200 search-button"
+                role='button'
+              >
+                Search
+              </button>
+            </div>
             {userName ? (<span className="username">{userName}</span>) : ''}
             <nav className="UserNav_root__343id align-center pt-1">
-              <Link href="/offers">
-                <a onClick={logOutHandler} className="Navbar_link__3Blki logout-link" id={userName ? "logout" : "signin"}>{userName ? 'Logout' : 'Sign In'}</a>
-              </Link>
+              <span class="Navbar_link__3Blki logout-link mt-2" id="signin"  onClick={logOutHandler}  role="link">{userName ? 'Logout' : 'Sign In'}</span>
             </nav>
           </div>
         </div>
