@@ -29,6 +29,8 @@
   }
 
   .Navbar_link__3Blki {
+    outline-style: none ;
+    outline-width: 0;
     display: inline-flex;
     align-items: center;
     padding: 0 16px;
@@ -52,6 +54,12 @@
     font-weight: 500 !important;
     align-items: center;
     text-transform: capitalize !important;
+    &:focus,
+    &:focus-visible,
+    &:active {
+      outline: 2px solid rgba(0, 0, 0, 0.2);
+      outline-offset: 2px;
+    }
   }
 }
 
@@ -62,5 +70,20 @@
       padding: 0 !important;
       font-size: 12px;
     }
+  }
+}
+
+.search-button{
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: middle
   }
 }

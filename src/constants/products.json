@@ -10,6 +10,7 @@
         "id":1,
         "installments":9,
         "isFav":false,
+        "altText":"img",
         "price":799,
         "sku":"iPhone12-device-info.png",
         "title":"iPhone 12"
@@ -23,6 +24,7 @@
       "description":"iPhone 12 Mini",
       "id":2,
       "installments":9,
+      "altText":"img",
       "isFav":false,
       "price":699,
       "sku":"iPhone12-device-info.png",
@@ -37,6 +39,7 @@
       "description":"iPhone 12 Pro Max",
       "id":3,
       "installments":9,
+      "altText":"img",
       "isFav":false,
       "price":1099,
       "sku":"iPhone12-device-info.png",
@@ -52,6 +55,7 @@
       "id":4,
       "installments":5,
       "isFav":false,
+      "altText":"img",
       "price":999,
       "sku":"iPhone12Pro-device-info.png",
       "title":"iPhone 12 Pro"
@@ -66,6 +70,7 @@
       "id":5,
       "installments":8,
       "isFav":false,
+      "altText":"img",
       "price":599,
       "sku":"iPhone11-device-info.png",
       "title":"iPhone 11"
@@ -80,6 +85,7 @@
       "id":6,
       "installments":3,
       "isFav":false,
+      "altText":"img",
       "price":699,
       "sku":"infocardiphone11Pro.png",
       "title":"iPhone 11 Pro"
@@ -96,7 +102,8 @@
       "isFav":false,
       "price":549,
       "sku":"infocard.png",
-      "title":"iPhone XS"
+      "title":"iPhone XS",
+      "altText":"iPhone XS"
    },
    {
       "availableSizes":[
@@ -110,7 +117,8 @@
       "isFav":false,
       "price":499,
       "sku":"infoiphoneXR.png",
-      "title":"iPhone XR"
+      "title":"iPhone XR",
+      "altText":"iPhone XR"
    },
    {
       "availableSizes":[
@@ -124,7 +132,8 @@
       "isFav":false,
       "price":649,
       "sku":"infocard.png",
-      "title":"iPhone XS Max"
+      "title":"iPhone XS Max",
+      "altText":"iPhone XS Max"
    },
    {
       "availableSizes":[
@@ -138,7 +147,8 @@
       "isFav":false,
       "price":999,
       "sku":"samsung-S20-device-info.png",
-      "title":"Galaxy S20"
+      "title":"Galaxy S20",
+      "altText":"Galaxy S20"
    },
    {
       "availableSizes":[
@@ -152,7 +162,8 @@
       "isFav":false,
       "price":1199,
       "sku":"samsung-S20+-device-info.png",
-      "title":"Galaxy S20+"
+      "title":"Galaxy S20+",
+      "altText":"Galaxy S20+"
    },
    {
       "availableSizes":[
@@ -166,7 +177,8 @@
       "isFav":false,
       "price":1399,
       "sku":"samsung-S20Ultra-device-info.png",
-      "title":"Galaxy S20 Ultra"
+      "title":"Galaxy S20 Ultra",
+      "altText":"Galaxy S20 Ultra"
    },
    {
       "availableSizes":[
@@ -180,7 +192,8 @@
       "isFav":false,
       "price":899,
       "sku":"samsung-S10-device-info.png",
-      "title":"Galaxy S10"
+      "title":"Galaxy S10",
+      "altText":"Galaxy S10"
    },
    {
       "availableSizes":[
@@ -194,7 +207,8 @@
       "isFav":false,
       "price":699,
       "sku":"samsung-s9-device-info.png",
-      "title":"Galaxy S9"
+      "title":"Galaxy S9",
+      "altText":"Galaxy S9"
    },
    {
       "availableSizes":[
@@ -208,7 +222,8 @@
       "isFav":false,
       "price":999,
       "sku":"Note20-device-info.png",
-      "title":"Galaxy Note 20"
+      "title":"Galaxy Note 20",
+      "altText":"Galaxy Note 20"
    },
    {
       "availableSizes":[
@@ -222,7 +237,8 @@
       "isFav":false,
       "price":1299,
       "sku":"Note20Ultra-device-info.png",
-      "title":"Galaxy Note 20 Ultra"
+      "title":"Galaxy Note 20 Ultra",
+      "altText":"Galaxy Note 20 Ultra"
    },
    {
       "availableSizes":[
@@ -236,7 +252,8 @@
       "isFav":false,
       "price":899,
       "sku":"GooglePixel4-device-info.png",
-      "title":"Pixel 4"
+      "title":"Pixel 4",
+      "altText":"Pixel 4"
    },
    {
       "availableSizes":[
@@ -250,7 +267,8 @@
       "isFav":false,
       "price":599,
       "sku":"GooglePixel3-device-info.png",
-      "title":"Pixel 3"
+      "title":"Pixel 3",
+      "altText":"Pixel 3"
    },
    {
       "availableSizes":[
@@ -264,7 +282,8 @@
       "isFav":false,
       "price":399,
       "sku":"device-info.jpg",
-      "title":"Pixel 2"
+      "title":"Pixel 2",
+      "altText":"Pixel 2"
    },
    {
       "availableSizes":[
@@ -278,7 +297,8 @@
       "isFav":false,
       "price":799,
       "sku":"OnePlus8-device-info.png",
-      "title":"One Plus 8"
+      "title":"One Plus 8",
+      "altText":"One Plus 8"
    },
    {
       "availableSizes":[
@@ -292,7 +312,8 @@
       "isFav":false,
       "price":899,
       "sku":"OnePlus8-device-info.png",
-      "title":"One Plus 8T"
+      "title":"One Plus 8T",
+      "altText":"One Plus 8T"
    },
    {
       "availableSizes":[
@@ -306,7 +327,8 @@
       "isFav":false,
       "price":899,
       "sku":"OnePlus8-device-info.png",
-      "title":"One Plus 8 Pro"
+      "title":"One Plus 8 Pro",
+      "altText":"One Plus 8 Pro"
    },
    {
       "availableSizes":[
@@ -320,7 +342,8 @@
       "isFav":false,
       "price":599,
       "sku":"OnePlus7T-DeviceInfo.png",
-      "title":"One Plus 7T"
+      "title":"One Plus 7T",
+      "altText":"One Plus 7T"
    },
    {
       "availableSizes":[
@@ -334,7 +357,8 @@
       "isFav":false,
       "price":499,
       "sku":"oneplus7device-info.png",
-      "title":"One Plus 7"
+      "title":"One Plus 7",
+      "altText":"One Plus 7"
    },
    {
       "availableSizes":[
@@ -348,7 +372,8 @@
       "isFav":false,
       "price":429,
       "sku":"Oneplus6T_infocard.png",
-      "title":"One Plus 6T"
+      "title":"One Plus 6T",
+      "altText":"One Plus 6T"
    }
   ]
 }
