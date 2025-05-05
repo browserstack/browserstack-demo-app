@@ -1,4 +1,5 @@
 import React from "react";
+import './style.scss';
 
 const Newsletter = () => {
   return (
@@ -7,7 +8,7 @@ const Newsletter = () => {
       <input
         id="newsletter-email"
         name="email-addr"
-        className="border border-gray-300 rounded-md p-2 mx-2"
+        className="inputClr border border-gray-300 p-2 mx-2"
         type="email"
         placeholder="Email"
         required
