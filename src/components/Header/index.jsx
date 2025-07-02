@@ -167,10 +167,11 @@ const Header = () => {
               />
               <button 
                 onClick={() => window.location.reload()}
-                className="px-4 py-1 bg-gray-100 border border-l-0 border-gray-300 rounded-r hover:bg-gray-200 search-button"
+                className="px-4 py-1 bg-gray-100 border border-l-0 border-gray-300"
                 role='button'
               >
-                Search
+                <img className="m-auto h-56 " alt="flowchart main" style={{ width: '18px', height: '21px' }} src={require(`../../../public/static/search.png`)} />
+                <span className="sr-only">Search</span>
               </button>
             </div>
             {userName ? (<span className="username">{userName}</span>) : ''}

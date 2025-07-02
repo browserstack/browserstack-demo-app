@@ -57,7 +57,7 @@ class App extends Component {
         <Header />
         <main style={{ padding: "20px 2%", margin: "0 auto" }}>
           <a href="#" >
-            <img className="m-auto h-56 " alt="banner main" style={{minWidth: '750px', minHeight: '280px'}} src={require(`../../../public/static/banner3.png`)} />
+            <img className="m-auto h-56 " alt="banner main" style={{minWidth: '750px', minHeight: '280px'}} src={require(`../../../public/static/banner.jpg`)} />
           </a>
           <Shelf />
         </main>
