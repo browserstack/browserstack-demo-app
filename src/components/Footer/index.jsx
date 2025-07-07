@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer>
       <hr style={{ padding: "0", margin: "0" }} />
-
+      <img className="m-auto h-56 " alt="flowchart main" style={{ minWidth: '860px', minHeight: '320px' }} src={require(`../../../public/static/FlowchartBstackdemo.png`)} />
       <div className="mx-auto max-w-8xl px-6">
         <div className="py-12 flex flex-col md:flex-row justify-between items-center space-y-4">
           <div className=" relative" style={{ width: "40%" }}>
