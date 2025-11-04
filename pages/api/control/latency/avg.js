@@ -1,0 +1,22 @@
+import { delay, checkSutAuth } from '../../../src/services/sut-utils';
+
+/**
+ * @swagger
+ * /api/control/latency/avg:
+ *   get:
+ *     description: Returns response with stable 500ms latency for testing average response time and TTFB
+ *     responses:
+ *       200:
+ *         description: Success with 500ms delay
+ *       401:
+ *         description: Unauthorized
+ */
+export default async function handler(req, res) {
+  // Check authentication
+  if (!checkSutAuth(req)) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  await delay(500);
+  res.status(200).json({ status: 'OK', latency: '500ms' });
+}
