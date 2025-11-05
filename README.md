@@ -41,3 +41,10 @@ visit `http://localhost:3000/`
 ### Open Swagger UI
 
 visit `http://localhost:3000/swagger`
+
+### Load Testing SUT
+To Test SUT:
+1. Start the dev server: `yarn dev`
+2. Navigate to: `http://localhost:3000/sut/login`
+3. Login with: `testuser` / `password`
+4. Access dashboard and test endpoints
