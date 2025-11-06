@@ -51,33 +51,11 @@ const getBaseHtml = (title, bodyContent) => `
 </html>
 `;
 
-const generateSessionId = () => Math.random().toString(36).substring(2, 15);
-
-// Simple auth check - returns session info or null
-const checkSutAuth = (req) => {
-    const cookieHeader = req.headers.cookie;
-    let sessionId = null;
-
-    if (cookieHeader) {
-        const sessionCookie = cookieHeader.split('; ').find(row => row.startsWith('sutSessionId='));
-        if (sessionCookie) {
-            sessionId = sessionCookie.split('=')[1];
-        }
-    }
-
-    if (sessionId && sessions[sessionId]) {
-        return { sessionId, session: sessions[sessionId] };
-    }
-    
-    return null;
-};
-
 module.exports = {
     DUMMY_USERNAME,
     DUMMY_PASSWORD,
     sessions,
     delay,
     getBaseHtml,
-    generateSessionId,
-    checkSutAuth
+    generateSessionId
 };
