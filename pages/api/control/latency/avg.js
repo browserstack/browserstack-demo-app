@@ -1,4 +1,4 @@
-import { delay, checkSutAuth } from '../../../src/services/sut-utils';
+import { delay, checkSutAuth } from '../../../../src/services/sut-utils';
 
 /**
  * @swagger
