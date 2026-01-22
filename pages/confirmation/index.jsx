@@ -27,7 +27,7 @@ const CheckOut = ({ cartTotal }) => {
 
   function generatePDF() {
     const doc = new jsPDF()
-    doc.text('BrowserStack Demo', 14, 20)
+    doc.text('Shopflow Demo', 14, 20)
     doc.autoTable({
       head: [['Brand', 'Type', 'Quantity', 'Price']],
       body:
@@ -48,7 +48,7 @@ const CheckOut = ({ cartTotal }) => {
   return (
     <>
       <Head>
-        <title>StackDemo</title>
+        <title>ShopFlowDemo</title>
         <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml"/>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
@@ -56,7 +56,7 @@ const CheckOut = ({ cartTotal }) => {
         <div className="checkoutHeader-content">
           <h2 className="checkoutHeader-heading">
             <Link href="/">
-              <a className="checkoutHeader-link">StackDemo</a>
+              <a className="checkoutHeader-link">ShopFlowDemo</a>
             </Link>
           </h2>
         </div>

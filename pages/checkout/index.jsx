@@ -68,7 +68,7 @@ const CheckOut = ({ cartTotal, cartProducts, emptyCart, resetCartTotal }) => {
   return (
     <>
       <Head>
-        <title>StackDemo</title>
+        <title>ShopFlowDemo</title>
         <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml"/>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
@@ -76,7 +76,7 @@ const CheckOut = ({ cartTotal, cartProducts, emptyCart, resetCartTotal }) => {
         <div className="checkoutHeader-content">
           <h2 className="checkoutHeader-heading">
             <Link href="/">
-              <a className="checkoutHeader-link">StackDemo</a>
+              <a className="checkoutHeader-link">ShopFlowDemo</a>
             </Link>
           </h2>
         </div>

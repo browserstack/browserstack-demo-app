@@ -1,5 +1,5 @@
-# browserstack-demo-app
-A shopping application to demonstrate real-world usage of BrowserStack testing methods, patterns, and workflows.
+# Shopflow-demo-app
+A shopping application to demonstrate real-world usage of Shopflow testing methods, patterns, and workflows.
 
 ## Features
 🛠 Built with [React](https://reactjs.org/), [Next](https://nextjs.org/)  
@@ -10,7 +10,7 @@ A shopping application to demonstrate real-world usage of BrowserStack testing m
 
 ## Getting Started
 
-BrowserStack Demo App is a full-stack Next/React application.
+Shopflow Demo App is a full-stack Next/React application.
 
 The app is bundled with [offers data](./src/constants/offers.json), [orders data](./src/constants/orders.json) and [products data](./src/constants/products.json) that contains everything you need to start using the app and run tests out-of-the-box.
 

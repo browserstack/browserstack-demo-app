@@ -8,8 +8,8 @@ const Swagger = () => {
   return (
       <div>
         <Head>
-          <title>BrowserStack Demo API</title>
-          <meta name="description" content="BrowserStack Demo API Swagger" />
+          <title>Shopflow Demo API</title>
+          <meta name="description" content="Shopflow Demo API Swagger" />
           <link rel="icon" href="/favicon.svg" />
         </Head>
         <SwaggerUI url="/api/doc" />

@@ -29,7 +29,7 @@ const Header = () => {
                   className="Navbar_logo__image__3Blki" 
                   alt="logo"
                   style={{ width:'265px', height: 'auto' }}
-                  src={require(`../../../public/static/bstackdemo_logo.jpg`)} 
+                  src={require(`../../../public/static/shopflowdemo_logo.png`)} 
                 />
               </a>
             </Link>
