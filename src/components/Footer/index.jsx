@@ -1,5 +1,4 @@
 import Newsletter from "../Newsletter";
-import "./style.scss";
 
 const Footer = () => {
   return (

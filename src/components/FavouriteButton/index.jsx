@@ -2,7 +2,6 @@ import { IconButton } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
-import styles from './style.scss';
 
 const FavouriteButton = ({ onClick, variant, isFavourited, className, ...props }) => {
   const ButtonStyles = ['Button'];

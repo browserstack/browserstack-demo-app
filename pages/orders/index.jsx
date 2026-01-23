@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import store2 from 'store2';
 import axios from '../../src/services/axios';
-import './style.scss';
+ 
 
 const Orders = ({ }) => {
   const [orders, setOrders] = useState([]);

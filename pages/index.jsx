@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import App from '../src/components/App';
-import './style.scss';
 
 export default function Home() {
   return (

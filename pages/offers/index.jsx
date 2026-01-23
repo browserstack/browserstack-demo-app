@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import store2 from 'store2';
 import Router from 'next/router';
 import axios from '../../src/services/axios';
-import './style.scss';
+ 
 
 const Offers = () => {
   const [geoLocationError, setGeoLocationError] = useState('');

@@ -1,12 +1,6 @@
 const optimizedImages = require('next-optimized-images');
-const withStyles = require('@webdeb/next-styles')
 const withPlugins = require('next-compose-plugins');
 const webpack = require('webpack');
-
-const sassConfig = {
-  sass: true, // use .scss files
-  modules: true // style.(m|module).css & style.(m|module).scss for module files
-}
 
 const optimizedImagesConfig = {
   inlineImageLimit: 8192,
@@ -45,6 +39,5 @@ const nextConfiguration = {
 };
 
 module.exports = withPlugins([
-  [withStyles, sassConfig],
   [optimizedImages, optimizedImagesConfig],
 ], nextConfiguration);

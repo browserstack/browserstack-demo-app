@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 
 import useWindowSize from '../utils/useWindowSize';
-import './style.scss';
+ 
 
 const Header = () => {
   const userName = store2.session.get('username');

@@ -7,7 +7,7 @@ import Router from 'next/router';
 import axios from '../../src/services/axios';
 import { emptyCart } from '../../src/services/cart/actions';
 import { resetCartTotal } from '../../src/services/total/actions';
-import './style.scss';
+ 
 
 const CheckOut = ({ cartTotal, cartProducts, emptyCart, resetCartTotal }) => {
   let userName = store2.session.get('username');
