@@ -5,14 +5,20 @@ import Sort from '../Sort';
 import Clearfix from '../../Clearfix';
 
 const ShelfHeader = props => {
-  return (
-    <div className="shelf-container-header" style={{marginRight: '50px'}}>
+  return (<>
+    <div style={{
+      fontSize: '1.5em',
+      fontWeight: 'bold',
+      margin: '0.67em 0'
+    }}>Products</div >
+    <div className="shelf-container-header" style={{ marginRight: '50px' }}>
       <small className="products-found">
-        <span>{props.productsLength} Product(s) found.</span>
+        <h3>{props.productsLength} Product(s) found.</h3>
       </small>
       <Sort />
       <Clearfix />
     </div>
+  </>
   );
 };
 
