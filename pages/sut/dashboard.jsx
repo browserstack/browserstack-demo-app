@@ -2,7 +2,6 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { checkSutAuth } from '../../src/services/sut-utils';
 
 export default function SutDashboard() {
   const router = useRouter();
