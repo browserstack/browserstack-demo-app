@@ -1,0 +1,77 @@
+# Build the app and run the end-to-end suite on every supported Node.js LTS line.
+name: E2E
+
+on:
+  pull_request:
+    branches: ["master", "main"]
+  push:
+    branches: ["master", "main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: e2e (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # Keep in sync with "engines" in package.json; drop a line when it reaches end-of-life.
+        node: [22, 24, 26]
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: e2e/package-lock.json
+
+      # Node 25+ no longer bundles Corepack, so install Yarn 1 explicitly.
+      - run: npm install -g yarn@1.22.22
+
+      - run: yarn install --frozen-lockfile
+
+      - run: yarn build
+
+      - name: Start app
+        run: |
+          yarn start -p 3000 > server.log 2>&1 &
+          for i in $(seq 1 60); do
+            curl -sf -o /dev/null http://localhost:3000/ && exit 0
+            sleep 1
+          done
+          cat server.log
+          exit 1
+
+      - name: Install e2e dependencies
+        working-directory: e2e
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      # The visual suite needs locally recorded reference screenshots, so CI runs the functional suite.
+      - name: Run e2e tests
+        working-directory: e2e
+        env:
+          BASE_URL: http://localhost:3000
+        run: npm test
+
+      - name: Upload report
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-report-node-${{ matrix.node }}
+          path: |
+            e2e/playwright-report
+            e2e/test-results
+            server.log
+          retention-days: 7

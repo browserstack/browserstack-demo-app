@@ -1,3 +1,4 @@
+require('./md4-polyfill');
 const optimizedImages = require('next-optimized-images');
 const withStyles = require('@webdeb/next-styles')
 const withPlugins = require('next-compose-plugins');
