@@ -101,6 +101,8 @@ test('favourites', async ({ page }) => {
 });
 
 test('checkout and confirmation', async ({ page }) => {
+  // The order number is random; pin it so its width is stable.
+  await page.addInitScript(() => { Math.random = () => 0.42; });
   await signIn(page, 'demouser');
   await waitForShelf(page);
   await addToCart(page, 1);
@@ -119,10 +121,7 @@ test('checkout and confirmation', async ({ page }) => {
   await page.locator('#checkout-shipping-continue').click();
   await expect(page.locator('#confirmation-message')).toBeVisible();
   await settle(page);
-  await expect(page).toHaveScreenshot('confirmation.png', {
-    ...shot,
-    mask: [page.locator('.checkout-form strong')],
-  });
+  await expect(page).toHaveScreenshot('confirmation.png', shot);
 });
 
 test('orders', async ({ page }) => {
