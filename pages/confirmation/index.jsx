@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import store2 from 'store2';
-const { jsPDF } = require("jspdf");
-import 'jspdf-autotable'
-import '../checkout/style.scss';
+import { jsPDF } from 'jspdf';
+import { applyPlugin } from 'jspdf-autotable';
+
+applyPlugin(jsPDF);
 
 const CheckOut = ({ cartTotal }) => {
   const [cartProducts, setCartProducts] = useState([]);
@@ -55,9 +56,7 @@ const CheckOut = ({ cartTotal }) => {
       <div className="checkoutHeader optimizedCheckout-header">
         <div className="checkoutHeader-content">
           <h2 className="checkoutHeader-heading">
-            <Link href="/">
-              <a className="checkoutHeader-link">StackDemo</a>
-            </Link>
+            <Link href="/" className="checkoutHeader-link">StackDemo</Link>
           </h2>
         </div>
       </div>
@@ -81,11 +80,9 @@ const CheckOut = ({ cartTotal }) => {
               </ol>
               <div className="continueButtonContainer">
                 <Link replace href="/">
-                  <a>
-                    <button className="button button--tertiary optimizedCheckout-buttonSecondary">
-                      Continue Shopping »
-                    </button>
-                  </a>
+                  <button className="button button--tertiary optimizedCheckout-buttonSecondary">
+                    Continue Shopping »
+                  </button>
                 </Link>
               </div>
             </div>
@@ -105,7 +102,7 @@ const CheckOut = ({ cartTotal }) => {
                       <li id={cartProduct.id} key={cartProduct.id} className="productList-item is-visible">
                         <div className="product">
                           <figure className="product-column product-figure">
-                            <img style={{height: '60px'}} alt={cartProduct.title} src={require(`../../public/static/${cartProduct.sku}`)} />
+                            <img style={{height: '60px'}} alt={cartProduct.title} src={`/static/${cartProduct.sku}`} />
                           </figure>
                           <div className="product-column product-body">
                             <h5 className="product-title optimizedCheckout-contentPrimary">
