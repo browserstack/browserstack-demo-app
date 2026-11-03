@@ -111,6 +111,9 @@ const SignIn = () => {
         <div className="Modal_modal__3I0HK">
           <form onSubmit={formHandler} className="w-80 flex flex-col justify-between p-3">
             <div className="flex justify-center pb-12 ">
+              <img src="/static/bstackdemo_logo.svg" alt="BrowserStack" style={{ width: '265px', height: 'auto', margin: '0 auto' }} />
+            </div>
+            <div className="flex justify-center pb-12 " style={{ display: 'none' }}>
               <svg width="156" height="156" viewBox="0 0 257 257" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M67.5384 173.762L27.7728 161.49L31.4952 159.135L55.6622 156.201L67.5384 173.762Z" fill="#666666"/>
                 <path fillRule="evenodd" clipRule="evenodd" d="M218.084 108.798C218.084 158.359 178.087 198.534 128.746 198.534C79.407 198.534 39.4092 158.359 39.4092 108.798C39.4092 59.2387 79.407 19.0623 128.746 19.0623C178.087 19.0623 218.084 59.2387 218.084 108.798Z" fill="#ECB360"/>
