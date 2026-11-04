@@ -34,11 +34,9 @@ export default function ZeroCls() {
           <p style={styles.text}>
             This page loads all content instantly. Your load product should report a CLS score of 0.0.
           </p>
-          <Link href="/sut/dashboard">
-            <a id="back-to-dashboard-btn" style={styles.button}>
+          <Link href="/sut/dashboard" id="back-to-dashboard-btn" style={styles.button}>
               Back to Dashboard
-            </a>
-          </Link>
+            </Link>
         </div>
       </div>
     </>

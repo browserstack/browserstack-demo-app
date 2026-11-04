@@ -11,8 +11,6 @@ import ShelfHeader from './ShelfHeader';
 import Clearfix from '../Clearfix';
 import Spinner from '../Spinner';
 
-import './style.scss';
-
 class Shelf extends Component {
   static propTypes = {
     fetchProducts: PropTypes.func.isRequired,

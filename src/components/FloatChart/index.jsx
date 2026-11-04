@@ -8,8 +8,6 @@ import { updateCart } from '../../services/total/actions';
 import CartProduct from './CartProduct';
 import util from '../../services/util';
 
-import './style.scss';
-
 class FloatCart extends Component {
   static propTypes = {
     loadCart: PropTypes.func.isRequired,

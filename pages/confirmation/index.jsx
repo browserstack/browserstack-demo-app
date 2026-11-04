@@ -4,9 +4,7 @@ import Router from 'next/router';
 import Link from 'next/link';
 import store2 from 'store2';
 const { jsPDF } = require("jspdf");
-import 'jspdf-autotable'
-import '../checkout/style.scss';
-
+import { autoTable } from 'jspdf-autotable';
 const CheckOut = ({ cartTotal }) => {
   const [cartProducts, setCartProducts] = useState([]);
   const [confirmationTotal, setConfirmationTotal] = useState({});
@@ -28,7 +26,7 @@ const CheckOut = ({ cartTotal }) => {
   function generatePDF() {
     const doc = new jsPDF()
     doc.text('BrowserStack Demo', 14, 20)
-    doc.autoTable({
+    autoTable(doc, {
       head: [['Brand', 'Type', 'Quantity', 'Price']],
       body:
           cartProducts.map(({availableSizes, title, quantity, price}) => {
@@ -55,9 +53,7 @@ const CheckOut = ({ cartTotal }) => {
       <div className="checkoutHeader optimizedCheckout-header">
         <div className="checkoutHeader-content">
           <h2 className="checkoutHeader-heading">
-            <Link href="/">
-              <a className="checkoutHeader-link">StackDemo</a>
-            </Link>
+            <Link href="/" className="checkoutHeader-link">StackDemo</Link>
           </h2>
         </div>
       </div>
@@ -81,12 +77,10 @@ const CheckOut = ({ cartTotal }) => {
               </ol>
               <div className="continueButtonContainer">
                 <Link replace href="/">
-                  <a>
                     <button className="button button--tertiary optimizedCheckout-buttonSecondary">
                       Continue Shopping »
                     </button>
-                  </a>
-                </Link>
+                  </Link>
               </div>
             </div>
             <aside className="layout-cart">

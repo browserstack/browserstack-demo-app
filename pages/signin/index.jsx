@@ -4,8 +4,6 @@ import store2 from 'store2';
 import Router from 'next/router';
 import Creatable from 'react-select/creatable';
 import axios from '../../src/services/axios';
-import './style.scss';
-
 const usernameOptions = [
   {
     label: 'Accepted usernames are', 
