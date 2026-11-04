@@ -29,6 +29,7 @@ BASE_URL=https://bstackdemo.com npm test
 | `checkout.spec.js` | Full purchase, confirmation, PDF receipt download, orders history |
 | `favourites-offers.spec.js` | Favourites per user, geolocation offers (supported city, unsupported city, denied), Swagger UI |
 | `sut.spec.js` | Load-testing SUT login, dashboard links, UI metric pages, logout and auth redirects |
+| `page-errors.spec.js` | No uncaught JavaScript errors (e.g. React hydration mismatches) on full page loads, signed in and out |
 
 ## Visual regression suite
 

@@ -1,11 +1,10 @@
 import Newsletter from "../Newsletter";
-import "./style.scss";
 
 const Footer = () => {
   return (
     <div>
       <hr style={{ padding: "0", margin: "0" }} />
-      <img className="m-auto h-56 " alt="flowchart main" style={{ minWidth: '860px', minHeight: '320px' }} src={require(`../../../public/static/FlowchartBstackdemo.png`)} />
+      <img className="m-auto h-56 " alt="flowchart main" style={{ minWidth: '860px', minHeight: '320px' }} src="/static/FlowchartBstackdemo.png" />
       <div class="gradient-fail-bg example">Exclusive offers coming soon</div>
 
       <div className="mx-auto max-w-8xl px-6 " style={{ justifyContent: 'space-between' }}>

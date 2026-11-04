@@ -1,0 +1,43 @@
+# Automated dependency updates. Security updates are raised regardless of this schedule.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # Held on their current major on purpose: newer majors change the rendered DOM
+      # (react-select) or need a coordinated migration (React 19 with react-redux and
+      # Material-UI). Upgrade these deliberately and verify with the e2e suite.
+      - dependency-name: react
+        update-types: [version-update:semver-major]
+      - dependency-name: react-dom
+        update-types: [version-update:semver-major]
+      - dependency-name: react-select
+        update-types: [version-update:semver-major]
+      - dependency-name: react-redux
+        update-types: [version-update:semver-major]
+      - dependency-name: redux
+        update-types: [version-update:semver-major]
+      - dependency-name: redux-thunk
+        update-types: [version-update:semver-major]
+
+  - package-ecosystem: npm
+    directory: /e2e
+    schedule:
+      interval: weekly
+    groups:
+      playwright:
+        patterns: ["@playwright/*"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]

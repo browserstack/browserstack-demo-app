@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import store2 from 'store2';
 import axios from '../../src/services/axios';
-import './style.scss';
 
 const Orders = ({ }) => {
   const [orders, setOrders] = useState([]);
@@ -128,7 +127,7 @@ const Orders = ({ }) => {
                                 <div className="a-fixed-left-grid-inner" style={{paddingLeft: '100px'}}>
                                   <div className="a-text-center a-fixed-left-grid-col a-col-left" style={{width: '100px', marginLeft: '-100px', float: 'left'}}>
                                     <div className="item-view-left-col-inner">
-                                      <img src={require(`../../public/static/${item.sku}`)} className="item-image" />
+                                      <img src={`/static/${item.sku}`} className="item-image" />
                                     </div>
                                   </div>
                                   <div className="a-fixed-left-grid-col a-col-right" style={{paddingLeft: '1.5%', float: 'left'}}>
