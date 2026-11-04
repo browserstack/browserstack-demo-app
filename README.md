@@ -22,9 +22,11 @@ The app also includes product images which are stored in [public/static](./publi
 
 
 ### Prerequisites
-You can run this project via [Docker](https://www.docker.com/) or [Node.js](https://nodejs.org/en/) **version 12** installed on your machine.
+You can run this project via [Docker](https://www.docker.com/) or [Node.js](https://nodejs.org/en/) installed on your machine. Node **26** (LTS) is recommended and pinned in [.nvmrc](./.nvmrc), so `nvm use` picks it up; Node 22 and 24 are also supported and tested in CI.
 
 ### Installation with node
+
+Node 26 no longer bundles Corepack, so install Yarn 1 first if you don't have it (`npm install -g yarn`).
 
 ```shell
 yarn install
@@ -41,6 +43,18 @@ visit `http://localhost:3000/`
 ### Open Swagger UI
 
 visit `http://localhost:3000/swagger`
+
+### Browser support
+
+The shop pages are compiled for the browsers listed under `browserslist` in [package.json](./package.json) (Chrome 49+, Firefox 50+, Safari 10+, Edge 15+). Internet Explorer is not supported. The Swagger UI page needs a newer browser (Chrome 62+, Firefox 78+, Safari 16.4+).
+
+### Styles
+
+Global stylesheets are imported in [pages/_app.js](./pages/_app.js), in an order that matters for the cascade. [styles/tailwind.css](./styles/tailwind.css) is a pre-compiled Tailwind CSS 1.9.6 build; don't edit it by hand.
+
+### End-to-end tests
+
+A Playwright regression suite covering every page, user flow and API lives in [e2e](./e2e). See [e2e/README.md](./e2e/README.md).
 
 ### Load Testing SUT
 To Test SUT:

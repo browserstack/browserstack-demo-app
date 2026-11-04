@@ -4,7 +4,7 @@ import store2 from 'store2';
 import Router from 'next/router';
 import Creatable from 'react-select/creatable';
 import axios from '../../src/services/axios';
-import './style.scss';
+import useHasMounted from '../../src/components/utils/useHasMounted';
 
 const usernameOptions = [
   {
@@ -57,8 +57,14 @@ const SignIn = () => {
   const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [apiError, setApiError] = useState('');
+  const hasMounted = useHasMounted();
   const userSession = store2.session.get('username');
-  if (userSession) {
+
+  useEffect(() => {
+    setApiError('');
+  }, [setApiError]);
+
+  if (hasMounted && userSession) {
     Router.replace('/');
     return <></>;
   }
@@ -66,10 +72,6 @@ const SignIn = () => {
   const handleChange = selectedOption => {
     setUsername(selectedOption.value);
   };
-
-  useEffect(() => {
-    setApiError('');
-  }, [setApiError]);
 
   const formHandler = e => {
     e.preventDefault();

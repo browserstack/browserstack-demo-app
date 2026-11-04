@@ -3,8 +3,10 @@ import { useEffect } from 'react';
 import store2 from 'store2';
 import Router from 'next/router';
 import App from '../../src/components/App';
+import useHasMounted from '../../src/components/utils/useHasMounted';
 
 const Favourites = () => {
+  const hasMounted = useHasMounted();
   let userName = store2.session.get('username');
 
   useEffect(() => {
@@ -16,7 +18,7 @@ const Favourites = () => {
     }
   }, []);
 
-  if(!userName) {
+  if(!hasMounted || !userName) {
     return <></>;
   }
   return (

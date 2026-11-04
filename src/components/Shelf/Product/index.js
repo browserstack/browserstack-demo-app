@@ -70,7 +70,7 @@ const Product = props => {
       </div>
       <Thumb
         classes="shelf-item__thumb"
-        src={isImageNotLoadingUser(username) || hideFirstProductImageForFirefox50 ? '' : product.sku && require(`../../../../public/static/${product.sku}`)}
+        src={isImageNotLoadingUser(username) || hideFirstProductImageForFirefox50 ? '' : product.sku && `/static/${product.sku}`}
         alt={product.altText || product.title}
       />
       <p className="shelf-item__title">{product.title}</p>

@@ -7,7 +7,6 @@ import Checkbox from '../../CheckBox';
 
 const availableSizes = ['Apple', 'Samsung', 'Google', 'OnePlus'];
 
-import './style.scss';
 
 class Filter extends Component {
   static propTypes = {

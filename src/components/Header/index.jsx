@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Router from 'next/router';
 
 import useWindowSize from '../utils/useWindowSize';
-import './style.scss';
 
 const Header = () => {
   const userName = store2.session.get('username');
@@ -23,15 +22,13 @@ const Header = () => {
       <div className="mx-auto max-w-8xl px-6">
         <div className="flex justify-between align-center flex-row py-4 md:py-6 :py-6 relative">
           <div className="flex flex-1 items-center">
-            <Link href="/">
-              <a className="Navbar_logo__26S5Y">
-                <img 
-                  className="Navbar_logo__image__3Blki" 
-                  alt="logo"
-                  style={{ width:'265px', height: 'auto' }}
-                  src={require(`../../../public/static/bstackdemo_logo.svg`)} 
-                />
-              </a>
+            <Link href="/" className="Navbar_logo__26S5Y">
+              <img
+                className="Navbar_logo__image__3Blki"
+                alt="logo"
+                style={{ width:'265px', height: 'auto' }}
+                src="/static/bstackdemo_logo.svg"
+              />
             </Link>
             <div className="space-x-4 ml-6 menu" style={{ 
               display: 'grid',
@@ -39,33 +36,29 @@ const Header = () => {
               gap: '1rem'
             }}>
               {/* Items in reverse DOM order but displayed in original order via grid */}
-              <Link href="/favourites">
-                <a 
-                  id="favourites" 
-                  className="Navbar_link__3Blki menu-item" 
-                  style={{ order: 3 }}
-                >
-                  <strong>Favourites</strong>
-                </a>
+              <Link
+                href="/favourites"
+                id="favourites"
+                className="Navbar_link__3Blki menu-item"
+                style={{ order: 3 }}
+              >
+                <strong>Favourites</strong>
               </Link>
-              <Link href="/orders">
-                <a 
-                  id="orders" 
-                  className="Navbar_link__3Blki menu-item"
-                  style={{ order: 2 }}
- 
-                >
-                  <strong>Orders</strong>
-                </a>
+              <Link
+                href="/orders"
+                id="orders"
+                className="Navbar_link__3Blki menu-item"
+                style={{ order: 2 }}
+              >
+                <strong>Orders</strong>
               </Link>
-              <Link href="/offers">
-                <a 
-                  id="offers" 
-                  className="Navbar_link__3Blki menu-item"
-                  style={{ order: 1 }}
-                >
-                  <strong>Offers</strong>
-                </a>
+              <Link
+                href="/offers"
+                id="offers"
+                className="Navbar_link__3Blki menu-item"
+                style={{ order: 1 }}
+              >
+                <strong>Offers</strong>
               </Link>
             </div>
           </div>
@@ -89,7 +82,7 @@ const Header = () => {
                   cursor: 'pointer'
                 }}
               >
-                <img className="m-auto h-56 " alt="flowchart main" style={{ width: '17px', height: '17px', marginRight: '7px' }} src={require(`../../../public/static/search.png`)} />
+                <img className="m-auto h-56 " alt="flowchart main" style={{ width: '17px', height: '17px', marginRight: '7px' }} src="/static/search.png" />
                 Search
               </button> 
             </div>
