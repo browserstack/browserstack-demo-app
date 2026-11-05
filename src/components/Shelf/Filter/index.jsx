@@ -7,6 +7,7 @@ import Checkbox from '../../CheckBox';
 
 const availableSizes = ['Apple', 'Samsung', 'Google', 'OnePlus'];
 
+
 class Filter extends Component {
   static propTypes = {
     updateFilters: PropTypes.func.isRequired,

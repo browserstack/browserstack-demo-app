@@ -5,9 +5,12 @@ import { connect } from 'react-redux';
 import store2 from 'store2';
 import Router from 'next/router';
 import axios from '../../src/services/axios';
+import useHasMounted from '../../src/components/utils/useHasMounted';
 import { emptyCart } from '../../src/services/cart/actions';
 import { resetCartTotal } from '../../src/services/total/actions';
+
 const CheckOut = ({ cartTotal, cartProducts, emptyCart, resetCartTotal }) => {
+  const hasMounted = useHasMounted();
   let userName = store2.session.get('username');
 
   const handleFormSubmit = e => {
@@ -59,7 +62,7 @@ const CheckOut = ({ cartTotal, cartProducts, emptyCart, resetCartTotal }) => {
     }
   }, []);
 
-  if (cartProducts.length === 0) {
+  if (!hasMounted || cartProducts.length === 0) {
     return <></>;
   };
 
@@ -156,7 +159,7 @@ const CheckOut = ({ cartTotal, cartProducts, emptyCart, resetCartTotal }) => {
                       <li id={cartProduct.id} key={cartProduct.id} className="productList-item is-visible">
                         <div className="product">
                           <figure className="product-column product-figure">
-                            <img alt={cartProduct.title} src={require(`../../public/static/${cartProduct.sku}`)} />
+                            <img alt={cartProduct.title} src={`/static/${cartProduct.sku}`} />
                           </figure>
                           <div className="product-column product-body">
                             <h5 className="product-title optimizedCheckout-contentPrimary">

@@ -75,17 +75,17 @@ export default function SutDashboard() {
           <h2 style={styles.sectionTitle}>UI Metric Control Pages (For Playwright / Selenium)</h2>
           <div style={styles.grid}>
             <Link href="/sut/ui/zero-cls" id="ui-zero-cls" style={{ ...styles.testLink, ...styles.success }}>
-                <strong>UI: Zero CLS Page</strong><br />Validate CLS Score is 0.0.
-              </Link>
+              <strong>UI: Zero CLS Page</strong><br />Validate CLS Score is 0.0.
+            </Link>
             <Link href="/sut/ui/minimum-inp" id="ui-minimum-inp" style={{ ...styles.testLink, ...styles.info }}>
-                <strong>UI: Minimum INP Page</strong><br />Validate Fast Interaction Responsiveness.
-              </Link>
+              <strong>UI: Minimum INP Page</strong><br />Validate Fast Interaction Responsiveness.
+            </Link>
             <Link href="/sut/ui/high-cls" id="ui-high-cls" style={{ ...styles.testLink, ...styles.danger }}>
-                <strong>UI: High CLS Shift Page</strong><br />Force unexpected layout shift.
-              </Link>
+              <strong>UI: High CLS Shift Page</strong><br />Force unexpected layout shift.
+            </Link>
             <Link href="/sut/ui/high-lcp" id="ui-high-lcp" style={{ ...styles.testLink, ...styles.warning }}>
-                <strong>UI: High LCP Page (3s Delay)</strong><br />Force slow page load/Largest Contentful Paint.
-              </Link>
+              <strong>UI: High LCP Page (3s Delay)</strong><br />Force slow page load/Largest Contentful Paint.
+            </Link>
           </div>
         </div>
 

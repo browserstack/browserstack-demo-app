@@ -1,4 +1,5 @@
 import Newsletter from "../Newsletter";
+
 const Footer = () => {
   return (
     <div>

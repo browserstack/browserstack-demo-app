@@ -5,10 +5,13 @@ import { useEffect, useState } from 'react';
 import store2 from 'store2';
 import Router from 'next/router';
 import axios from '../../src/services/axios';
+import useHasMounted from '../../src/components/utils/useHasMounted';
+
 const Offers = () => {
   const [geoLocationError, setGeoLocationError] = useState('');
   const [offers, setOffers] = useState([]);
   const userName = store2.session.get('username');
+  const hasMounted = useHasMounted();
 
   useEffect(() => {
     if (!userName) {
@@ -44,7 +47,7 @@ const Offers = () => {
     return (() => setOffers([]));
   }, []);
 
-  if (!userName) {
+  if (!hasMounted || !userName) {
     return <></>;
   }
 
@@ -70,7 +73,7 @@ const Offers = () => {
                 <div className="pt-6 text-2xl font-bold tracking-wide text-center text-red-50 offers-listing justify-center">
                     {Object.keys(offers).map((offer) => (
                       <div id={offer} key={offer} className="offer">
-                        <img style={{height: '150px'}} alt={offer} src={require(`../../public/static/${offers[offer].imageId}`)} />
+                        <img style={{height: '150px'}} alt={offer} src={`/static/${offers[offer].imageId}`} />
                         <div className="offer-title">{offers[offer].title}</div>
                       </div>
                     ))}

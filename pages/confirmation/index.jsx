@@ -3,8 +3,11 @@ import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import store2 from 'store2';
-const { jsPDF } = require("jspdf");
-import { autoTable } from 'jspdf-autotable';
+import { jsPDF } from 'jspdf';
+import { applyPlugin } from 'jspdf-autotable';
+
+applyPlugin(jsPDF);
+
 const CheckOut = ({ cartTotal }) => {
   const [cartProducts, setCartProducts] = useState([]);
   const [confirmationTotal, setConfirmationTotal] = useState({});
@@ -26,7 +29,7 @@ const CheckOut = ({ cartTotal }) => {
   function generatePDF() {
     const doc = new jsPDF()
     doc.text('BrowserStack Demo', 14, 20)
-    autoTable(doc, {
+    doc.autoTable({
       head: [['Brand', 'Type', 'Quantity', 'Price']],
       body:
           cartProducts.map(({availableSizes, title, quantity, price}) => {
@@ -77,10 +80,10 @@ const CheckOut = ({ cartTotal }) => {
               </ol>
               <div className="continueButtonContainer">
                 <Link replace href="/">
-                    <button className="button button--tertiary optimizedCheckout-buttonSecondary">
-                      Continue Shopping »
-                    </button>
-                  </Link>
+                  <button className="button button--tertiary optimizedCheckout-buttonSecondary">
+                    Continue Shopping »
+                  </button>
+                </Link>
               </div>
             </div>
             <aside className="layout-cart">
@@ -99,7 +102,7 @@ const CheckOut = ({ cartTotal }) => {
                       <li id={cartProduct.id} key={cartProduct.id} className="productList-item is-visible">
                         <div className="product">
                           <figure className="product-column product-figure">
-                            <img style={{height: '60px'}} alt={cartProduct.title} src={require(`../../public/static/${cartProduct.sku}`)} />
+                            <img style={{height: '60px'}} alt={cartProduct.title} src={`/static/${cartProduct.sku}`} />
                           </figure>
                           <div className="product-column product-body">
                             <h5 className="product-title optimizedCheckout-contentPrimary">

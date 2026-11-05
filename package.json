@@ -2,6 +2,9 @@
   "name": "stackdemo",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,29 +13,35 @@
   "dependencies": {
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
-    "autoprefixer": "^10.0.2",
-    "axios": "^1.21.0",
+    "axios": "^1.20.0",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.9",
-    "next": "15.5.29",
+    "next": "16.4.2",
     "next-swagger-doc": "^0.5.0",
-    "postcss-import": "^13.0.0",
-    "postcss-preset-env": "^6.7.0",
+    "postcss-preset-env": "^11.6.1",
     "prop-types": "^15.8.1",
     "react": "18.3.1",
-    "react-device-detect": "^1.14.0",
+    "react-device-detect": "^2.2.3",
     "react-dom": "18.3.1",
-    "react-redux": "^7.2.9",
-    "react-select": "^3.1.1",
+    "react-redux": "^5.1.2",
+    "react-select": "^3.2.0",
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
-    "sass": "^1.107.1",
+    "sass": "^1.105.2",
     "store2": "^2.14.4",
-    "swagger-ui-react": "^5.34.1",
-    "tailwindcss": "^1.9.6"
+    "swagger-ui-react": "^5.34.0"
   },
-  "engines": {
-    "node": ">=22"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "browserslist": [
+    "chrome >= 49",
+    "edge >= 15",
+    "firefox >= 50",
+    "safari >= 10",
+    "ios_saf >= 10",
+    "opera >= 36",
+    "samsung >= 5"
+  ],
+  "resolutions": {
+    "**/swagger-jsdoc/glob": "^14.0.3",
+    "**/@swagger-api/apidom-reference/minimatch": "^11.0.4"
+  }
 }
