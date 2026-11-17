@@ -25,7 +25,6 @@ import { check } from 'k6';
 
 const HTTP = (__ENV.SUT_HTTP || 'http://host.docker.internal:8080').replace(/\/+$/, '');
 const URL = `${HTTP}/graphql`;
-const RUN = __ENV.RUN || 'k6-graphql';
 
 // One entry per operation (= one row in LT). kind: ok | gqlError | partial | http
 const OPERATIONS = [
@@ -53,9 +52,14 @@ export const options = {
   },
 };
 
-export function call() {
+// A fresh run id per execution, so teardown's counts are this execution's only.
+export function setup() {
+  return { run: __ENV.RUN || `k6-graphql-${Date.now()}` };
+}
+
+export function call(data) {
   const o = OPERATIONS[Number(__ENV.OP_INDEX)];
-  const headers = { 'x-sut-run': RUN };
+  const headers = { 'x-sut-run': data.run };
   if (o.status) headers['x-sut-status'] = String(o.status);
   const params = { headers, tags: { op: o.op } };
   let res;
@@ -66,7 +70,14 @@ export function call() {
     const body = o.anonymous ? { query: o.query } : { query: o.query, operationName: o.op };
     res = http.post(URL, JSON.stringify(body), params);
   }
-  const json = res.json();
+  let json;
+  try {
+    json = res.json();
+  } catch {
+    // A non-JSON body (e.g. a proxy's HTML 502) fails the run instead of skipping the checks.
+    check(res, { [`${o.op}: JSON response`]: () => false });
+    return;
+  }
   const code = json && json.errors && json.errors.length ? json.errors[0].extensions?.code : null;
   if (o.kind === 'ok') check(res, { [`${o.op}: 200 with data, no errors`]: (r) => r.status === 200 && json.data && !json.errors });
   if (o.kind === 'gqlError' || o.kind === 'partial') {
@@ -76,14 +87,14 @@ export function call() {
   check(res, { 'response body under 2 KB (always checked by LT)': (r) => r.body.length <= 2048 });
 }
 
-export function teardown() {
-  const res = http.get(`${HTTP}/stats?run=${RUN}`);
+export function teardown(data) {
+  const res = http.get(`${HTTP}/stats?run=${encodeURIComponent(data.run)}`);
   if (res.status !== 200) {
-    console.log(`SUT stats unavailable (${res.status}) for run ${RUN}`);
+    console.log(`SUT stats unavailable (${res.status}) for run ${data.run}`);
     return;
   }
   const g = res.json().graphql;
-  console.log(`SUT counts for run ${RUN}: operations=${JSON.stringify(g.operations)} graphqlErrors=${g.graphqlErrors} httpStatus=${JSON.stringify(g.httpStatus)}`);
+  console.log(`SUT counts for run ${data.run}: operations=${JSON.stringify(g.operations)} graphqlErrors=${g.graphqlErrors} httpStatus=${JSON.stringify(g.httpStatus)}`);
 }
 
 // ---- expected values (load-testing-backend LTS-5689-combined formulas) ----

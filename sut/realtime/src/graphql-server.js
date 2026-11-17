@@ -2,8 +2,8 @@
 // subscriptions over WebSocket (graphql-ws, subprotocol graphql-transport-ws) on /graphql.
 // Every field is a knob, so each GraphQL metric in a Load Testing run is computable.
 
-const { buildSchema, GraphQLError, NoSchemaIntrospectionCustomRule, Kind } = require('graphql');
-const { createHandler } = require('graphql-http/lib/use/http');
+const { buildSchema, GraphQLError, NoSchemaIntrospectionCustomRule, Kind, parse, getOperationAST } = require('graphql');
+const { createHandler } = require('graphql-http');
 const { useServer } = require('graphql-ws/use/ws');
 const { WebSocketServer } = require('ws');
 const config = require('./config');
@@ -83,15 +83,37 @@ const rootValue = {
     return { id: String(lastItemId), name, filler: '' };
   },
   // Subscription source: graphql maps each event through the `ticks` field of the payload.
-  ticks: async function* ticks({ count, intervalMs }, context) {
+  // A hand-written iterator rather than a generator: return() (client gone) must cancel a pending
+  // interval, which a generator only sees at its next yield, after counting one more tick.
+  ticks: ({ count, intervalMs }, context) => {
     bounded('count', count, config.maxCount);
     bounded('intervalMs', intervalMs, config.maxDelayMs);
-    const g = stats.get(context?.run).graphql;
-    for (let seq = 1; seq <= count; seq += 1) {
-      if (seq > 1 && intervalMs) await sleep(intervalMs);
-      g.ticksSent += 1;
-      yield { ticks: { seq, of: count } };
-    }
+    let seq = 0;
+    let done = false;
+    let timer;
+    let wake;
+    const finish = async () => {
+      done = true;
+      clearTimeout(timer);
+      if (wake) wake();
+      return { value: undefined, done: true };
+    };
+    return {
+      [Symbol.asyncIterator]() { return this; },
+      async next() {
+        if (done || seq >= count) return finish();
+        if (seq > 0 && intervalMs) {
+          await new Promise((resolve) => { wake = resolve; timer = setTimeout(resolve, intervalMs); });
+          wake = undefined;
+          if (done) return { value: undefined, done: true };
+        }
+        seq += 1;
+        // Looked up per tick, so a /reset during the subscription does not strand the count.
+        stats.get(context?.run).graphql.ticksSent += 1;
+        return { value: { ticks: { seq, of: count } }, done: false };
+      },
+      return: finish,
+    };
   },
 };
 
@@ -112,7 +134,7 @@ const recordOperation = (run, label, result) => {
   g.graphqlErrors += errors;
 };
 
-const makeHttpHandler = ({ introspection }) => createHandler({
+const makeHandler = ({ introspection }) => createHandler({
   schema,
   rootValue,
   context: (req) => ({ run: req.raw.sutRun }),
@@ -125,6 +147,47 @@ const makeHttpHandler = ({ introspection }) => createHandler({
 const sendJson = (res, status, body, headers = {}) => {
   res.writeHead(status, { 'Content-Type': 'application/json', ...headers });
   res.end(JSON.stringify(body));
+};
+
+class BodyTooLarge extends Error {}
+
+// graphql-http's own node adapter reads the whole body with no limit; this one stops at max.
+const readBody = (req, max) => new Promise((resolve, reject) => {
+  if (Number(req.headers['content-length']) > max) return reject(new BodyTooLarge());
+  const chunks = [];
+  let size = 0;
+  req.on('data', (chunk) => {
+    if (size > max) return;
+    size += chunk.length;
+    if (size > max) return reject(new BodyTooLarge());
+    chunks.push(chunk);
+  });
+  req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+  req.on('error', reject);
+});
+
+// The node adapter of graphql-http, with a bounded body read in front of it.
+const makeHttpHandler = (options) => {
+  const handle = makeHandler(options);
+  return async (req, res) => {
+    let body = '';
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      try {
+        body = await readBody(req, config.maxBodyBytes);
+      } catch (err) {
+        if (!(err instanceof BodyTooLarge)) throw err;
+        // The rest of an oversized body is read and dropped, never buffered; Connection: close
+        // ends the socket after the 413 without resetting a client that is still sending.
+        req.resume();
+        return sendJson(res, 413, { errors: [{ message: `request body over ${config.maxBodyBytes} bytes` }] }, { Connection: 'close' });
+      }
+    }
+    const [result, init] = await handle({
+      url: req.url, method: req.method, headers: req.headers, body: () => body, raw: req, context: { res },
+    });
+    res.writeHead(init.status, init.statusText, init.headers).end(result);
+    return undefined;
+  };
 };
 
 const createGraphql = () => {
@@ -163,13 +226,25 @@ const createGraphql = () => {
   };
 
   // Subscriptions: graphql-ws closes with 4406 unless the client asks for graphql-transport-ws.
+  // Queries and mutations go over HTTP, where they are counted as operations; over WebSocket they
+  // are refused, so the subscription counters hold subscriptions only.
   const subscriptions = new WebSocketServer({ noServer: true });
   useServer({
     schema,
-    roots: { subscription: rootValue, query: rootValue, mutation: rootValue },
+    roots: { subscription: rootValue },
     context: (ctx) => ({ run: ctx.extra.request.sutRun }),
-    onSubscribe: (ctx) => {
-      stats.get(ctx.extra.request.sutRun).graphql.subscriptionsStarted += 1;
+    onSubscribe: (ctx, id, payload) => {
+      let op;
+      try {
+        op = getOperationAST(parse(payload.query), payload.operationName);
+      } catch {
+        return undefined; // graphql-ws reports the syntax error
+      }
+      if (op && op.operation !== 'subscription') {
+        return [new GraphQLError(`sut: send ${op.operation} operations over HTTP; this WebSocket takes subscriptions only`)];
+      }
+      if (op) stats.get(ctx.extra.request.sutRun).graphql.subscriptionsStarted += 1;
+      return undefined;
     },
     onComplete: (ctx) => {
       stats.get(ctx.extra.request.sutRun).graphql.subscriptionsCompleted += 1;
@@ -179,8 +254,11 @@ const createGraphql = () => {
   const handleUpgrade = (req, socket, head, url) => {
     const params = knobsLib.withHeaderKnobs(url.searchParams, req.headers);
     req.sutRun = params.get('run') || undefined;
-    stats.get(req.sutRun).graphql.wsConnections += 1;
-    subscriptions.handleUpgrade(req, socket, head, (ws) => subscriptions.emit('connection', ws, req));
+    subscriptions.handleUpgrade(req, socket, head, (ws) => {
+      // Counted once the socket is open: ws answers a malformed upgrade itself with a 400.
+      stats.get(req.sutRun).graphql.wsConnections += 1;
+      subscriptions.emit('connection', ws, req);
+    });
   };
 
   return { handleHttp, handleUpgrade, subscriptions };

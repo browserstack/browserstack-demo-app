@@ -138,6 +138,81 @@ test('subscriptions over graphql-transport-ws send exactly count ticks, then com
   assert.equal(g.subscriptionsCompleted, 1);
 });
 
+test('a subscription the client leaves mid-interval stops: no tick is counted after it', async () => {
+  const client = createClient({ url: `${sut.url('/graphql')}?run=left`, webSocketImpl: WebSocket, lazy: false, retryAttempts: 0 });
+  const ticks = [];
+  await new Promise((resolve) => {
+    const unsubscribe = client.subscribe({ query: 'subscription { ticks(count: 5, intervalMs: 300) { seq } }' }, {
+      next: (msg) => { ticks.push(msg.data.ticks.seq); unsubscribe(); setTimeout(resolve, 50); },
+      error: () => {},
+      complete: () => {},
+    });
+  });
+  await sleep(400);
+  await client.dispose();
+  assert.deepEqual(ticks, [1]);
+  assert.equal(stats.snapshot('left').graphql.ticksSent, 1);
+});
+
+test('a /reset during a subscription leaves the later ticks counted under the run', async () => {
+  const client = createClient({ url: `${sut.url('/graphql')}?run=rs`, webSocketImpl: WebSocket, lazy: false, retryAttempts: 0 });
+  await new Promise((resolve, reject) => {
+    let n = 0;
+    client.subscribe({ query: 'subscription { ticks(count: 3, intervalMs: 100) { seq } }' }, {
+      next: () => { n += 1; if (n === 1) stats.reset('rs'); },
+      error: reject,
+      complete: resolve,
+    });
+  });
+  await client.dispose();
+  await sleep(50);
+  const g = stats.snapshot('rs').graphql;
+  assert.equal(g.ticksSent, 2);
+  assert.equal(g.subscriptionsCompleted, 1);
+});
+
+test('the WebSocket endpoint refuses queries and mutations; they are not counted as subscriptions', async () => {
+  const client = createClient({ url: `${sut.url('/graphql')}?run=wsq`, webSocketImpl: WebSocket, lazy: false, retryAttempts: 0 });
+  const errors = await new Promise((resolve) => {
+    client.subscribe({ query: 'query Bad { fail }' }, { next: () => {}, error: resolve, complete: () => resolve(null) });
+  });
+  await client.dispose();
+  assert.match(errors[0].message, /over HTTP/);
+  const g = stats.snapshot('wsq').graphql;
+  assert.equal(g.subscriptionsStarted, 0);
+  assert.equal(g.wsConnections, 1);
+});
+
+test('a malformed GraphQL upgrade is a 400 and not counted as a connection', async () => {
+  const net = require('net');
+  const { port } = new URL(sut.httpUrl('/'));
+  const reply = await new Promise((resolve) => {
+    const socket = net.connect(Number(port), '127.0.0.1', () => {
+      socket.write('GET /graphql?run=badkey HTTP/1.1\r\nHost: x\r\nUpgrade: websocket\r\nConnection: Upgrade\r\n' +
+        'Sec-WebSocket-Version: 13\r\nSec-WebSocket-Key: nope\r\nSec-WebSocket-Protocol: graphql-transport-ws\r\n\r\n');
+    });
+    let data = '';
+    socket.on('data', (d) => { data += d; });
+    socket.on('close', () => resolve(data));
+  });
+  assert.match(reply, /^HTTP\/1\.1 400/);
+  assert.equal(stats.snapshot('badkey')?.graphql.wsConnections ?? 0, 0);
+});
+
+test('a request body over SUT_MAX_BODY_BYTES is a 413 and never executed', async () => {
+  const config = require('../src/config');
+  const big = 'x'.repeat(config.maxBodyBytes + 1);
+  const r = await fetch(sut.httpUrl('/graphql?run=big'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ query: `{ echo(message: "${big}") }` }),
+  });
+  assert.equal(r.status, 413);
+  const g = stats.snapshot('big').graphql;
+  assert.deepEqual(g.operations, {});
+  assert.deepEqual(g.httpStatus, { 413: 1 });
+});
+
 test('without graphql-transport-ws: an unknown subprotocol fails the handshake, none at all is closed with 4406', async () => {
   // graphql-ws accepts the upgrade without selecting a protocol, so a client that offered one
   // fails the handshake itself (RFC 6455 4.1) before the server's 4406 arrives.

@@ -73,9 +73,9 @@ with [graphql-ws](https://github.com/enisdenjo/graphql-ws) (subprotocol `graphql
 
 | Endpoint | Behaviour |
 | --- | --- |
-| `POST` / `GET /graphql` | Executes the operation. `GET` runs queries only (a mutation is a 405). |
+| `POST` / `GET /graphql` | Executes the operation. `GET` runs queries only (a mutation is a 405). A body over `SUT_MAX_BODY_BYTES` (default 1 MiB) is a 413. |
 | `POST` / `GET /graphql-nointrospect` | Same schema; introspection is a validation error. |
-| `WS /graphql` | Subscriptions. A client that offers another subprotocol fails the handshake; one that offers none is closed with 4406. |
+| `WS /graphql` | Subscriptions only: a query or mutation sent here gets an error (send those over HTTP). A client that offers another subprotocol fails the handshake; one that offers none is closed with 4406. |
 
 Schema (`src/graphql-server.js`): every field is a knob.
 
@@ -89,12 +89,12 @@ Schema (`src/graphql-server.js`): every field is a knob.
 | `createItem(name, delayMs)` (mutation) | Creates an item after `delayMs`. |
 | `ticks(count, intervalMs)` (subscription) | Sends `count` ticks, `intervalMs` apart (the first at once), then completes. |
 
-Request-level knobs (query param or header; the header wins):
+Request-level knobs (query param or header; the header wins). Subscriptions take `run` only:
 - `delayMs` / `x-sut-delay-ms`: wait before handling the request. The query text stays the same, so the operation row in a report stays the same.
 - `status` / `x-sut-status`: answer with that HTTP status (400-599) and a GraphQL error body (`extensions.code` = `HTTP_<status>`), without executing.
 - `run` / `x-sut-run`: count the request under `/stats?run=<id>`.
 
-`/stats` counts operations as `<query|mutation> <name|anonymous> <ok|partial|error>`. *partial* means errors plus at least one top-level field with data; all-null data is *error*. It also counts GraphQL errors, the HTTP status of every response, subscription sockets, subscriptions started and completed, and ticks sent.
+`/stats` counts operations as `<query|mutation> <name|anonymous> <ok|partial|error>`. *partial* means errors plus at least one top-level field with data; all-null data is *error*. It also counts GraphQL errors, the HTTP status of every response, subscription sockets (once the upgrade succeeds), subscriptions started and completed, and ticks sent (none after the client leaves).
 
 A validation error (unknown field, introspection on `/graphql-nointrospect`) is HTTP 200 for clients
 that accept `application/json` (k6 and JMeter by default), and 400 only for clients that ask for
