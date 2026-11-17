@@ -72,6 +72,15 @@ export default function SutDashboard() {
         </div>
 
         <div style={styles.card}>
+          <h2 style={styles.sectionTitle}>Realtime Metric Control (WebSocket / gRPC, for k6 / JMeter)</h2>
+          <div style={styles.grid}>
+            <Link href="/sut/realtime" id="realtime-console" style={{ ...styles.testLink, ...styles.info }}>
+              <strong>WebSocket + gRPC SUT</strong><br />Echo, hold, close codes, drops, rejects, pushes and delays; gRPC status, deadline and stream control.
+            </Link>
+          </div>
+        </div>
+
+        <div style={styles.card}>
           <h2 style={styles.sectionTitle}>UI Metric Control Pages (For Playwright / Selenium)</h2>
           <div style={styles.grid}>
             <Link href="/sut/ui/zero-cls" id="ui-zero-cls" style={{ ...styles.testLink, ...styles.success }}>

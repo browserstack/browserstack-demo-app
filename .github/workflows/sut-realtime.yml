@@ -1,0 +1,75 @@
+# Unit tests and RFC 6455 conformance (Autobahn TestSuite) for the realtime SUT in sut/realtime.
+name: SUT realtime
+
+on:
+  pull_request:
+    branches: ["master", "main"]
+    paths: ["sut/realtime/**", ".github/workflows/sut-realtime.yml"]
+  push:
+    branches: ["master", "main"]
+    paths: ["sut/realtime/**", ".github/workflows/sut-realtime.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sut-realtime-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    name: unit (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        # Keep in sync with "engines" in sut/realtime/package.json.
+        node: [22, 24, 26]
+    defaults:
+      run:
+        working-directory: sut/realtime
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: sut/realtime/package-lock.json
+      - run: npm ci
+      - run: npm test
+
+  autobahn:
+    name: autobahn conformance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: sut/realtime
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: sut/realtime/package-lock.json
+      - run: npm ci
+      - name: Start SUT
+        run: |
+          SUT_LOG=0 node src/index.js > sut.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8080/healthz && exit 0
+            sleep 1
+          done
+          cat sut.log
+          exit 1
+      - name: Run Autobahn fuzzingclient
+        run: npm run autobahn
+      - name: Upload Autobahn report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: autobahn-report
+          path: sut/realtime/autobahn/reports
+          retention-days: 7
