@@ -134,8 +134,14 @@ export function reflect() {
   check(failed, { 'reflection connect fails without reflection': (f) => f === true });
 }
 
+// RUN is fixed unless set, so clear what an earlier execution left under it; teardown's counts
+// are then this execution's only. Not a gRPC call, so no gRPC figure changes.
+export function setup() {
+  http.post(`${HTTP}/reset?run=${encodeURIComponent(RUN)}`);
+}
+
 export function teardown() {
-  const res = http.get(`${HTTP}/stats?run=${RUN}`);
+  const res = http.get(`${HTTP}/stats?run=${encodeURIComponent(RUN)}`);
   if (res.status !== 200) {
     console.log(`SUT stats unavailable (${res.status}) for run ${RUN}`);
     return;

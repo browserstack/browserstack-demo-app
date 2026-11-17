@@ -70,7 +70,11 @@ export default function SutRealtime() {
     const sessionCookie = document.cookie.split('; ').find((row) => row.startsWith('sutSessionId='));
     if (!sessionCookie) router.replace('/sut/login');
     else setIsAuthenticated(true);
-    return () => socketRef.current?.close();
+    return () => {
+      const ws = socketRef.current;
+      socketRef.current = null;
+      ws?.close();
+    };
   }, [router]);
 
   const url = buildSutUrl(base, preset, knobs);
@@ -84,14 +88,18 @@ export default function SutRealtime() {
     addLog(`connecting ${url}`);
     const ws = new WebSocket(url);
     socketRef.current = ws;
+    // A replaced socket still fires its close later; only the current one may update the page.
+    const current = () => socketRef.current === ws;
     ws.onopen = () => {
+      if (!current()) return;
       opened = true;
       setState('open');
       addLog(`open after ${Math.round(performance.now() - startedAt)} ms`);
     };
-    ws.onmessage = (event) => addLog(`received: ${event.data}`);
-    ws.onerror = () => addLog(opened ? 'error' : 'connection failed (rejected, refused or unreachable)');
+    ws.onmessage = (event) => current() && addLog(`received: ${event.data}`);
+    ws.onerror = () => current() && addLog(opened ? 'error' : 'connection failed (rejected, refused or unreachable)');
     ws.onclose = (event) => {
+      if (!current()) return;
       setState('closed');
       addLog(`closed with code ${event.code}${event.reason ? ` (${event.reason})` : ''} after ${Math.round(performance.now() - startedAt)} ms`);
     };
