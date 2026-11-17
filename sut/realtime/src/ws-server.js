@@ -70,7 +70,7 @@ const createWsServer = ({ basePath = process.env.SUT_BASE_PATH || '' } = {}) => 
     const url = new URL(req.url, 'http://sut.local');
     const path = stripBase(url.pathname, basePath);
     const run = url.searchParams.get('run') || undefined;
-    const count = (status) => stats.bump(stats.get(run).http, `${path} ${status}`);
+    const count = (status, key = path) => stats.bump(stats.get(run).http, `${key} ${status}`);
 
     if (req.method === 'OPTIONS') {
       res.writeHead(204, {
@@ -113,7 +113,8 @@ const createWsServer = ({ basePath = process.env.SUT_BASE_PATH || '' } = {}) => 
       count(426);
       return sendJson(res, 426, { error: `${path} is a WebSocket endpoint; send an Upgrade request` }, { Upgrade: 'websocket' });
     }
-    count(404);
+    // One key for every unknown path, so stray paths cannot grow /stats without bound.
+    count(404, '*');
     return sendJson(res, 404, { error: 'not found', see: '/' });
   };
 
@@ -160,7 +161,12 @@ const createWsServer = ({ basePath = process.env.SUT_BASE_PATH || '' } = {}) => 
   const onConnection = (ws, socket, knobs, runStats, meta) => {
     const openedAt = Date.now();
     const s = runStats.ws;
-    const timers = [];
+    // Pending timers only: each one removes itself when it fires.
+    const timers = new Set();
+    const later = (fn, ms) => {
+      const timer = setTimeout(() => { timers.delete(timer); fn(); }, ms);
+      timers.add(timer);
+    };
     let msgsIn = 0;
     let msgsOut = 0;
     // When the server starts the close, count the code it sent, not the client's echo.
@@ -191,33 +197,41 @@ const createWsServer = ({ basePath = process.env.SUT_BASE_PATH || '' } = {}) => 
         ws.pong(data);
         s.pongsOut += 1;
       };
-      if (knobs.pongDelayMs) timers.push(setTimeout(pong, knobs.pongDelayMs));
+      if (knobs.pongDelayMs) later(pong, knobs.pongDelayMs);
       else pong();
     });
 
-    for (let i = 1; i <= knobs.n; i += 1) {
-      const push = () => send(`push ${i}/${knobs.n}`);
-      if (knobs.pushIntervalMs) timers.push(setTimeout(push, knobs.pushIntervalMs * i));
-      else push();
+    if (knobs.pushIntervalMs) {
+      // One pending timer at a time, each aimed at openedAt + i x interval: no drift, and no
+      // single delay above the interval (n x interval can pass Node's 2^31-1 ms timer limit).
+      const pushNext = (i) => {
+        if (i > knobs.n) return;
+        later(() => {
+          send(`push ${i}/${knobs.n}`);
+          pushNext(i + 1);
+        }, Math.max(0, openedAt + knobs.pushIntervalMs * i - Date.now()));
+      };
+      pushNext(1);
+    } else {
+      for (let i = 1; i <= knobs.n; i += 1) send(`push ${i}/${knobs.n}`);
     }
 
     if (knobs.ms !== undefined) {
-      timers.push(
-        setTimeout(() => {
-          if (knobs.drop) {
-            // No close frame: the client sees 1006 (k6) or an I/O reset (JMeter).
-            if (knobs.rst && typeof socket.resetAndDestroy === 'function') socket.resetAndDestroy();
-            else socket.destroy();
-          } else {
-            serverCloseCode = knobs.code;
-            ws.close(knobs.code, `sut ${knobs.preset}`);
-          }
-        }, knobs.ms),
-      );
+      later(() => {
+        if (knobs.drop) {
+          // No close frame: the client sees 1006 (k6) or an I/O reset (JMeter).
+          if (knobs.rst && typeof socket.resetAndDestroy === 'function') socket.resetAndDestroy();
+          else socket.destroy();
+        } else {
+          serverCloseCode = knobs.code;
+          ws.close(knobs.code, `sut ${knobs.preset}`);
+        }
+      }, knobs.ms);
     }
 
     ws.on('close', (receivedCode) => {
       timers.forEach(clearTimeout);
+      timers.clear();
       s.open -= 1;
       const code = receivedCode === 1006 || serverCloseCode === undefined ? receivedCode : serverCloseCode;
       stats.bump(s.closes, String(code));

@@ -27,7 +27,8 @@ npm run autobahn   # RFC 6455 conformance against /echo (needs Docker and a runn
 ## WebSocket
 
 No auth and no subprotocol are required. Any query string is accepted (e.g. `?leg=x`); an
-`Authorization` header is accepted and logged as scheme, length and a short hash, never the value.
+`Authorization` header is accepted and logged as scheme, length and a short hash, never the value
+(the scheme reads `unknown` unless it is a standard one such as `Bearer` or `Basic`).
 
 | Endpoint | Behaviour |
 | --- | --- |
@@ -69,8 +70,11 @@ only. A delay past the client deadline gives `DEADLINE_EXCEEDED`; out-of-range v
 `GET /stats?run=<id>` returns what the server saw for connections and calls tagged with that run
 id: upgrades accepted / rejected by status, messages in / out, pings, close codes (the code the
 server sent when it started the close), peak concurrent sessions, gRPC calls by method and
-status, cancels, and stream counters. Compare them with the Load Testing report for the same run.
+status, cancels, stream counters, and HTTP responses by `<path> <status>` (every unknown path
+shares the key `* 404`). Compare them with the Load Testing report for the same run.
 Counts are per process, so run one replica (or sum across replicas).
+A client-streaming call that the client cancels after sending its messages looks to the server
+like a normal half-close (grpc-js), so it is counted once, under the status the server sent.
 
 ## Deterministic k6 scripts
 

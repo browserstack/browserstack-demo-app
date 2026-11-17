@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const net = require('net');
 const { startWs, connect, sleep, stats } = require('./helpers');
 const { createResetServer } = require('../src/reset-server');
+const { describeAuth } = require('../src/log');
 
 let sut;
 before(async () => { sut = await startWs(); });
@@ -185,6 +186,15 @@ test('an Authorization header is accepted and counted, never required', async ()
   assert.equal(s.authHeaders, 1);
 });
 
+test('only a known Authorization scheme is logged by name; never the credential', () => {
+  assert.equal(describeAuth('Bearer abc123').scheme, 'Bearer');
+  assert.equal(describeAuth('private-token').scheme, 'unknown');
+  assert.equal(describeAuth('Weird abc123').scheme, 'unknown');
+  const d = describeAuth('private-token');
+  assert.equal(d.length, 13);
+  assert.ok(!JSON.stringify(d).includes('private-token'));
+});
+
 test('HTTP helpers: /http/<status>, 426 on WS paths, /stats and /reset', async () => {
   const ok = await fetch(sut.httpUrl('/http/200?run=h'));
   assert.equal(ok.status, 200);
@@ -197,9 +207,12 @@ test('HTTP helpers: /http/<status>, 426 on WS paths, /stats and /reset', async (
   assert.equal((await fetch(sut.httpUrl('/http/200?delayMs=150'))).status, 200);
   assert.ok(Date.now() - delayedAt >= 145);
   assert.equal((await fetch(sut.httpUrl('/echo'))).status, 426);
+  assert.equal((await fetch(sut.httpUrl('/missing-1?run=h'))).status, 404);
+  assert.equal((await fetch(sut.httpUrl('/missing-2?run=h'))).status, 404);
 
   const body = await (await fetch(sut.httpUrl('/stats?run=h'))).json();
-  assert.deepEqual(body.http, { '/http/200 200': 1, '/http/429 429': 1 });
+  // Unknown paths share one key.
+  assert.deepEqual(body.http, { '/http/200 200': 1, '/http/429 429': 1, '* 404': 2 });
   assert.equal((await fetch(sut.httpUrl('/stats?run=missing'))).status, 404);
   assert.equal((await fetch(sut.httpUrl('/reset?run=h'), { method: 'POST' })).status, 200);
   assert.equal(stats.snapshot('h'), null);

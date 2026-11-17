@@ -59,7 +59,7 @@ export function setup() {
 export function failures(data) {
   const i = exec.scenario.iterationInTest;
   if (i < REJECTS) {
-    const res = ws.connect(`${WS}/reject?status=503&run=${data.run}`, null, () => {});
+    const res = ws.connect(`${WS}/reject?status=503&run=${encodeURIComponent(data.run)}`, null, () => {});
     check(res, { 'reject leg answered 503': (r) => r && r.status === 503 });
     return;
   }
@@ -99,7 +99,7 @@ export function sessions(data) {
 }
 
 export function teardown(data) {
-  const res = http.get(`${HTTP}/stats?run=${data.run}`);
+  const res = http.get(`${HTTP}/stats?run=${encodeURIComponent(data.run)}`);
   if (res.status !== 200) {
     console.log(`SUT stats unavailable (${res.status}) for run ${data.run}`);
     return;

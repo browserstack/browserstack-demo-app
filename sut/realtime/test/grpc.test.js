@@ -105,6 +105,22 @@ test('BidiEcho echoes every message and ends when the client half-closes', async
   assert.equal(g.streamMsgsOut, 3);
 });
 
+// A client that cancels mid-stream still half-closes first (grpc-js 1.14), so the server sees an
+// ordinary 'end' and answers; the call is counted once, under the outcome the server sent.
+test('ClientStream and BidiEcho cancelled mid-stream are each counted once', async () => {
+  const cancelEarly = (open) => new Promise((resolve) => {
+    const call = open();
+    call.on('error', () => {});
+    call.write({ seq: 1 });
+    setTimeout(() => { call.cancel(); setTimeout(resolve, 100); }, 50);
+  });
+  await cancelEarly(() => sut.client.ClientStream(metadata({ 'x-sut-run': 'cx' }), () => {}));
+  await cancelEarly(() => sut.client.BidiEcho(metadata({ 'x-sut-run': 'cx' })));
+  const g = stats.snapshot('cx').grpc;
+  assert.equal(g.streamsOpened, 2);
+  assert.equal(Object.values(g.calls).reduce((a, b) => a + b, 0), 2);
+});
+
 const listServices = (port, version) => new Promise((resolve) => {
   const call = reflectionClient(port, version).ServerReflectionInfo();
   call.on('data', (r) => resolve({ services: (r.list_services_response?.service || []).map((s) => s.name), err: null }));
