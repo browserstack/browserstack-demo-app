@@ -1,16 +1,16 @@
-# Realtime SUT: WebSocket + gRPC
+# Realtime SUT: WebSocket + gRPC + GraphQL
 
-A system under test for BrowserStack Load Testing's WebSocket and gRPC reports. Every behaviour
+A system under test for BrowserStack Load Testing's WebSocket, gRPC and GraphQL reports. Every behaviour
 is chosen by the client (query params, `x-sut-*` headers, request fields or gRPC metadata), so
 every metric a k6 or JMeter run reports has a value you can compute before the run.
 
 It is a separate Node service, not a Next.js route: Next API routes cannot hold a WebSocket or
-serve gRPC. The `/sut/realtime` page in the app is a browser console for it.
+serve gRPC or GraphQL subscriptions. The `/sut/realtime` page in the app is a browser console for it.
 
 ```shell
 cd sut/realtime
 npm ci
-npm start          # ws/http :8080, gRPC :50051 (reflection) and :50052 (none), TCP reset :50099
+npm start          # ws/http/graphql :8080, gRPC :50051 (reflection) and :50052 (none), TCP reset :50099
 npm test           # unit tests (node:test)
 npm run autobahn   # RFC 6455 conformance against /echo (needs Docker and a running SUT)
 ```
@@ -64,6 +64,41 @@ Behaviour can also come from metadata, which wins: `x-sut-delay-ms`, `x-sut-stat
 only. A delay past the client deadline gives `DEADLINE_EXCEEDED`; out-of-range values are
 `INVALID_ARGUMENT`. Port 50052 has no reflection, so a reflection connect there fails.
 
+## GraphQL
+
+GraphQL over HTTP on the HTTP port, served by [graphql-http](https://github.com/graphql/graphql-http)
+(the reference implementation of the GraphQL-over-HTTP spec), and subscriptions over WebSocket
+with [graphql-ws](https://github.com/enisdenjo/graphql-ws) (subprotocol `graphql-transport-ws`).
+
+| Endpoint | Behaviour |
+| --- | --- |
+| `POST` / `GET /graphql` | Executes the operation. `GET` runs queries only (a mutation is a 405). |
+| `POST` / `GET /graphql-nointrospect` | Same schema; introspection is a validation error. |
+| `WS /graphql` | Subscriptions. A client that offers another subprotocol fails the handshake; one that offers none is closed with 4406. |
+
+Schema (`src/graphql-server.js`): every field is a knob.
+
+| Field | Behaviour |
+| --- | --- |
+| `echo(message)` | Returns the message. |
+| `delay(ms)` | Resolves after `ms`: the response-time knob. |
+| `items(count, bytes)` | Returns `count` items with `bytes` of filler each: the payload-size knob. |
+| `fail(code, message)` | Raises a GraphQL error with `extensions.code`: HTTP 200, the field is `null`. With another field in the same operation it is partial data. |
+| `node { child { child … } }` | An endless chain: the query decides the depth. |
+| `createItem(name, delayMs)` (mutation) | Creates an item after `delayMs`. |
+| `ticks(count, intervalMs)` (subscription) | Sends `count` ticks, `intervalMs` apart (the first at once), then completes. |
+
+Request-level knobs (query param or header; the header wins):
+- `delayMs` / `x-sut-delay-ms`: wait before handling the request. The query text stays the same, so the operation row in a report stays the same.
+- `status` / `x-sut-status`: answer with that HTTP status (400-599) and a GraphQL error body (`extensions.code` = `HTTP_<status>`), without executing.
+- `run` / `x-sut-run`: count the request under `/stats?run=<id>`.
+
+`/stats` counts operations as `<query|mutation> <name|anonymous> <ok|partial|error>`. *partial* means errors plus at least one top-level field with data; all-null data is *error*. It also counts GraphQL errors, the HTTP status of every response, subscription sockets, subscriptions started and completed, and ticks sent.
+
+A validation error (unknown field, introspection on `/graphql-nointrospect`) is HTTP 200 for clients
+that accept `application/json` (k6 and JMeter by default), and 400 only for clients that ask for
+`application/graphql-response+json` — that is the spec's rule, not a SUT choice.
+
 ## Server-side counts
 
 `GET /stats?run=<id>` returns what the server saw for connections and calls tagged with that run
@@ -74,10 +109,15 @@ Counts are per process, so run one replica (or sum across replicas).
 
 ## Deterministic k6 scripts
 
-[`examples/k6/ws-deterministic.js`](examples/k6/ws-deterministic.js) and
-[`examples/k6/grpc-deterministic.js`](examples/k6/grpc-deterministic.js) drive every WebSocket /
-gRPC metric to a value computed from the script's own constants, and print the value Load Testing
-should report next to what k6 measured, plus the SUT's `/stats` counts for the run.
+[`examples/k6/ws-deterministic.js`](examples/k6/ws-deterministic.js),
+[`examples/k6/grpc-deterministic.js`](examples/k6/grpc-deterministic.js) and
+[`examples/k6/graphql-deterministic.js`](examples/k6/graphql-deterministic.js) drive every
+WebSocket / gRPC / GraphQL metric to a value computed from the script's own constants, and print
+the value Load Testing should report next to what k6 measured, plus the SUT's `/stats` counts for
+the run. The GraphQL design follows Load Testing's response-check sampling (first 20 responses per
+operation per VU, then 1 in 4): every VU makes 10 calls per operation or fewer and every body stays
+under 2 KB, so every response is checked; each operation has one fixed delay, because per-row
+percentiles are TDigest.
 
 ```shell
 cd sut/realtime   # SUT running on the host
@@ -124,6 +164,16 @@ These are engine behaviours, not SUT behaviours, but every expected value depend
   nothing for an unreachable target (the connect throws).
 - `reflect: true` against a server without reflection emits three status-12 samples with no
   method or name tags; against a server with reflection it emits none.
+
+**GraphQL — k6 v2.2.0 (`k6/http`, `k6/websockets`) and JMeter 5.6.3 (built-in GraphQL HTTP Request), 2026-11-17**
+- A GraphQL error, partial data and a validation error are all **HTTP 200**: k6 `http_req_failed` is
+  0 and JMeter `success` is true. Only a non-2xx status (the `status` knob) counts as failed.
+- k6 tags every POST with the same `url` / `name` (`…/graphql`), so operations are not told apart
+  unless the script sets a `name` tag or the reader parses the body. A GET puts the query text in
+  the `url` tag, so each distinct GET query is its own row.
+- JMeter labels the row with the sampler name and records the full URL.
+- A subscription with `k6/websockets` counts `connection_init`, `subscribe` and the client close
+  frame as sent (3), and `connection_ack`, each `next` and `complete` as received.
 
 **JMeter gRPC (`jmeter-grpc-request` 2.0.2)**
 - OK: code `200`, message ` success`. Error: code ` 500`, message ` <code> <NAME>`. URL is `null`.

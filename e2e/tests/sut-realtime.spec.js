@@ -37,6 +37,24 @@ test('the gRPC reference lists the four LoadSut methods', async ({ page }) => {
   await expect(rows.locator('td:first-child')).toHaveText(['Unary', 'ServerStream', 'ClientStream', 'BidiEcho']);
 });
 
+test('the GraphQL reference lists every schema field', async ({ page }) => {
+  await openRealtime(page);
+  await expect(page.locator('#graphql-fields tbody tr')).toHaveCount(7);
+  await expect(page.locator('#graphql-fields tbody tr td:first-child').first()).toHaveText('echo(message)');
+});
+
+test('live: the GraphQL endpoint answers and counts the operation', async ({ request }) => {
+  const http = SUT_WS_URL.replace(/^ws/, 'http');
+  const run = `e2e-gql-${Date.now()}`;
+  const res = await request.post(`${http}/graphql?run=${run}`, {
+    data: { query: 'query E2E { echo(message: "hi") }', operationName: 'E2E' },
+  });
+  expect(res.status()).toBe(200);
+  expect(await res.json()).toEqual({ data: { echo: 'hi' } });
+  const stats = await (await request.get(`${http}/stats?run=${run}`)).json();
+  expect(stats.graphql.operations).toEqual({ 'query E2E ok': 1 });
+});
+
 test('live: /push sends n messages, echoes, and the server closes with the requested code', async ({ page }) => {
   await openRealtime(page);
   await page.locator('#ws-preset').selectOption('push');

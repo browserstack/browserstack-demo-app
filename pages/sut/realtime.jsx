@@ -44,6 +44,16 @@ const GRPC_METHODS = [
   ['BidiEcho', 'stream StreamMessage', 'Echoes every message, ends on half-close (behaviour from metadata).'],
 ];
 
+const GRAPHQL_FIELDS = [
+  ['echo(message)', 'Returns the message.'],
+  ['delay(ms)', 'Resolves after ms: the response-time knob.'],
+  ['items(count, bytes)', 'count items with bytes of filler each: the payload-size knob.'],
+  ['fail(code, message)', 'A GraphQL error with extensions.code (HTTP 200); with another field it is partial data.'],
+  ['node { child { ... } }', 'An endless chain: the query decides the depth.'],
+  ['createItem(name, delayMs)', 'Mutation: creates an item after delayMs.'],
+  ['ticks(count, intervalMs)', 'Subscription: count ticks, intervalMs apart, then complete.'],
+];
+
 export default function SutRealtime() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -181,6 +191,28 @@ export default function SutRealtime() {
                 <tr key={method}>
                   <td style={styles.td}><code>{method}</code></td>
                   <td style={styles.td}><code>{request}</code></td>
+                  <td style={styles.td}>{behaviour}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div style={styles.card}>
+          <h2 style={styles.sectionTitle}>GraphQL</h2>
+          <p style={styles.note}>
+            <code>POST</code>/<code>GET {toHttpBase(base)}/graphql</code> (GraphQL over HTTP), <code>/graphql-nointrospect</code>{' '}
+            (introspection off), and subscriptions over <code>graphql-transport-ws</code> on <code>{base.replace(/\/+$/, '')}/graphql</code>.
+            Request knobs: <code>delayMs</code>, <code>status</code>, <code>run</code> (or <code>x-sut-*</code> headers).
+          </p>
+          <table style={styles.table} id="graphql-fields">
+            <thead>
+              <tr><th style={styles.th}>Field</th><th style={styles.th}>Behaviour</th></tr>
+            </thead>
+            <tbody>
+              {GRAPHQL_FIELDS.map(([field, behaviour]) => (
+                <tr key={field}>
+                  <td style={styles.td}><code>{field}</code></td>
                   <td style={styles.td}>{behaviour}</td>
                 </tr>
               ))}

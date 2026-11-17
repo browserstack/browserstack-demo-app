@@ -75,7 +75,7 @@ export default function SutDashboard() {
           <h2 style={styles.sectionTitle}>Realtime Metric Control (WebSocket / gRPC, for k6 / JMeter)</h2>
           <div style={styles.grid}>
             <Link href="/sut/realtime" id="realtime-console" style={{ ...styles.testLink, ...styles.info }}>
-              <strong>WebSocket + gRPC SUT</strong><br />Echo, hold, close codes, drops, rejects, pushes and delays; gRPC status, deadline and stream control.
+              <strong>WebSocket + gRPC + GraphQL SUT</strong><br />Echo, hold, close codes, drops, rejects, pushes and delays; gRPC status, deadline and stream control; GraphQL delays, errors, payload, depth and subscriptions.
             </Link>
           </div>
         </div>
