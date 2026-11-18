@@ -40,7 +40,8 @@ test('anonymous operations are counted as "anonymous"', async () => {
 test('delay(ms) sets the response-time floor', async () => {
   const r = await gql({ query: '{ delay(ms: 300) { ms } }' });
   assert.equal(r.body.data.delay.ms, 300);
-  assert.ok(r.elapsed >= 295 && r.elapsed < 700, `elapsed ${r.elapsed} ms`);
+  // The floor is the knob; the ceiling only catches a delay that is far off on a slow runner.
+  assert.ok(r.elapsed >= 295 && r.elapsed < 5000, `elapsed ${r.elapsed} ms`);
 });
 
 test('items(count, bytes) returns exactly that payload; oversize input is BAD_USER_INPUT', async () => {
@@ -141,10 +142,10 @@ test('subscriptions over graphql-transport-ws send exactly count ticks, then com
 test('a subscription the client leaves mid-interval stops: no tick is counted after it', async () => {
   const client = createClient({ url: `${sut.url('/graphql')}?run=left`, webSocketImpl: WebSocket, lazy: false, retryAttempts: 0 });
   const ticks = [];
-  await new Promise((resolve) => {
+  await new Promise((resolve, reject) => {
     const unsubscribe = client.subscribe({ query: 'subscription { ticks(count: 5, intervalMs: 300) { seq } }' }, {
       next: (msg) => { ticks.push(msg.data.ticks.seq); unsubscribe(); setTimeout(resolve, 50); },
-      error: () => {},
+      error: reject,
       complete: () => {},
     });
   });
@@ -181,6 +182,43 @@ test('the WebSocket endpoint refuses queries and mutations; they are not counted
   const g = stats.snapshot('wsq').graphql;
   assert.equal(g.subscriptionsStarted, 0);
   assert.equal(g.wsConnections, 1);
+});
+
+test('a syntax error fails only that subscription; one failing validation is not counted as started', async () => {
+  const client = createClient({ url: `${sut.url('/graphql')}?run=syn`, webSocketImpl: WebSocket, lazy: false, retryAttempts: 0 });
+  const ticks = [];
+  const good = new Promise((resolve, reject) => {
+    client.subscribe({ query: 'subscription { ticks(count: 3, intervalMs: 150) { seq } }' }, {
+      next: (msg) => ticks.push(msg.data.ticks.seq), error: reject, complete: resolve,
+    });
+  });
+  const errorOf = (query) => new Promise((resolve) => {
+    client.subscribe({ query }, { next: () => {}, error: resolve, complete: () => resolve(null) });
+  });
+  const syntax = await errorOf('subscription {');
+  const invalid = await errorOf('subscription { missing }');
+  await good;
+  await client.dispose();
+  assert.match(syntax[0].message, /Syntax Error/);
+  assert.match(invalid[0].message, /Cannot query field "missing"/);
+  assert.deepEqual(ticks, [1, 2, 3]);
+  await sleep(50);
+  const g = stats.snapshot('syn').graphql;
+  assert.equal(g.subscriptionsStarted, 1);
+  assert.equal(g.subscriptionsCompleted, 1);
+});
+
+test('aliases cannot multiply a response past the per-request budget', async () => {
+  const config = require('../src/config');
+  const bytes = Math.floor(config.maxPayloadBytes / 2);
+  const aliases = Array.from({ length: 8 }, (_, i) => `f${i}: filler`).join(' ');
+  const r = await gql({ query: `{ items(count: 1, bytes: ${bytes}) { ${aliases} } }` }, { query: '?run=amp' });
+  assert.equal(r.status, 200);
+  assert.equal(r.body.data, null);
+  assert.match(r.body.errors[0].message, /per-request budget/);
+  assert.equal(r.body.errors.length, 1);
+  const ok = await gql({ query: `{ items(count: 1, bytes: ${bytes}) { filler } }` });
+  assert.equal(ok.body.data.items[0].filler.length, bytes);
 });
 
 test('a malformed GraphQL upgrade is a 400 and not counted as a connection', async () => {

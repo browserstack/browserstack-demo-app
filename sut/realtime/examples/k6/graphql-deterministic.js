@@ -83,6 +83,8 @@ export function call(data) {
   if (o.kind === 'gqlError' || o.kind === 'partial') {
     check(res, { [`${o.op}: 200 with GraphQL error ${o.code}`]: (r) => r.status === 200 && code === o.code });
   }
+  // Partial means data next to the error, not an error-only response.
+  if (o.kind === 'partial') check(res, { [`${o.op}: partial data`]: () => json.data?.echo === 'x' && json.data?.fail === null });
   if (o.kind === 'http') check(res, { [`${o.op}: HTTP ${o.status} with error ${o.code}`]: (r) => r.status === o.status && code === o.code });
   check(res, { 'response body under 2 KB (always checked by LT)': (r) => r.body.length <= 2048 });
 }
@@ -94,7 +96,10 @@ export function teardown(data) {
     return;
   }
   const g = res.json().graphql;
-  console.log(`SUT counts for run ${data.run}: operations=${JSON.stringify(g.operations)} graphqlErrors=${g.graphqlErrors} httpStatus=${JSON.stringify(g.httpStatus)}`);
+  // The SUT's graphqlErrors counts executed operations only; status-knob responses (the 503s)
+  // are answered without executing, so they appear in httpStatus, not in graphqlErrors.
+  console.log(`SUT counts for run ${data.run}: operations=${JSON.stringify(g.operations)} graphqlErrors=${g.graphqlErrors} ` +
+    `(+ ${g.httpStatus['503'] || 0} status-knob 503s = LT graphqlErrorCount) httpStatus=${JSON.stringify(g.httpStatus)}`);
 }
 
 // ---- expected values (load-testing-backend LTS-5689-combined formulas) ----
@@ -141,7 +146,7 @@ export function handleSummary(data) {
     ['summary httpErrorPct (HTTP only)', f2((e.outcome.httpErrors / all) * 100), f2((failedLocal / totalLocal) * 100), 'GraphQL errors never count here'],
     ['errorPercentage, GraphQL rows only', e.errorPct, '-', 'only the Unavailable row has errors (100%)'],
     ['graphqlCheckedCount', e.checked, '-', 'every response checked (<= 20 per op per VU, < 2 KB)'],
-    ['graphqlErrorCount', e.gqlErrors, '-', 'GraphQL errors on 200 + the 503 error bodies'],
+    ['graphqlErrorCount', e.gqlErrors, '-', 'GraphQL errors on 200 + the 503 error bodies (SUT graphqlErrors + 503s)'],
     ['graphqlErrorPct', e.gqlErrorPct, '-', 'errors / checked'],
     ['outcome clean/graphqlErrors/httpErrors/unchecked', `${e.outcome.clean}/${e.outcome.graphqlErrors}/${e.outcome.httpErrors}/${e.outcome.unchecked}`, '-', 'partial data is an error'],
     ['totalErrorPct', e.totalErrorPct, '-', '(httpErrors + outcome.graphqlErrors) / requests'],

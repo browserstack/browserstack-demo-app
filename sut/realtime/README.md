@@ -73,7 +73,7 @@ with [graphql-ws](https://github.com/enisdenjo/graphql-ws) (subprotocol `graphql
 
 | Endpoint | Behaviour |
 | --- | --- |
-| `POST` / `GET /graphql` | Executes the operation. `GET` runs queries only (a mutation is a 405). A body over `SUT_MAX_BODY_BYTES` (default 1 MiB) is a 413. |
+| `POST` / `GET /graphql` | Executes the operation. `GET` runs queries only (a mutation is a 405). A body over `SUT_MAX_BODY_BYTES` (default 1 MiB) is a 413. Each request may resolve at most `SUT_MAX_RESPONSE_FIELDS` fields (default 1,000,000) and `SUT_MAX_PAYLOAD_BYTES` of strings, aliases included; past that the result is a `BAD_USER_INPUT` error. |
 | `POST` / `GET /graphql-nointrospect` | Same schema; introspection is a validation error. |
 | `WS /graphql` | Subscriptions only: a query or mutation sent here gets an error (send those over HTTP). A client that offers another subprotocol fails the handshake; one that offers none is closed with 4406. |
 
@@ -94,7 +94,10 @@ Request-level knobs (query param or header; the header wins). Subscriptions take
 - `status` / `x-sut-status`: answer with that HTTP status (400-599) and a GraphQL error body (`extensions.code` = `HTTP_<status>`), without executing.
 - `run` / `x-sut-run`: count the request under `/stats?run=<id>`.
 
-`/stats` counts operations as `<query|mutation> <name|anonymous> <ok|partial|error>`. *partial* means errors plus at least one top-level field with data; all-null data is *error*. It also counts GraphQL errors, the HTTP status of every response, subscription sockets (once the upgrade succeeds), subscriptions started and completed, and ticks sent (none after the client leaves).
+`/stats` counts operations as `<query|mutation> <name|anonymous> <ok|partial|error>`. A
+`status`-knob response is answered without executing, so it is counted in `httpStatus` only, not
+in `operations` or `graphqlErrors`: Load Testing's `graphqlErrorCount`, which parses that error
+body too, is the SUT's `graphqlErrors` plus those responses. *partial* means errors plus at least one top-level field with data; all-null data is *error*. It also counts GraphQL errors, the HTTP status of every response, subscription sockets (once the upgrade succeeds), subscriptions started and completed, and ticks sent (none after the client leaves).
 
 A validation error (unknown field, introspection on `/graphql-nointrospect`) is HTTP 200 for clients
 that accept `application/json` (k6 and JMeter by default), and 400 only for clients that ask for

@@ -2,7 +2,9 @@
 // subscriptions over WebSocket (graphql-ws, subprotocol graphql-transport-ws) on /graphql.
 // Every field is a knob, so each GraphQL metric in a Load Testing run is computable.
 
-const { buildSchema, GraphQLError, NoSchemaIntrospectionCustomRule, Kind, parse, getOperationAST } = require('graphql');
+const {
+  buildSchema, GraphQLError, NoSchemaIntrospectionCustomRule, Kind, parse, getOperationAST, execute, defaultFieldResolver,
+} = require('graphql');
 const { createHandler } = require('graphql-http');
 const { useServer } = require('graphql-ws/use/ws');
 const { WebSocketServer } = require('ws');
@@ -49,6 +51,23 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const badInput = (message) => new GraphQLError(message, { extensions: { code: 'BAD_USER_INPUT' } });
 const bounded = (name, value, max) => {
   if (!Number.isInteger(value) || value < 0 || value > max) throw badInput(`${name} must be between 0 and ${max}, got ${value}`);
+  return value;
+};
+
+// Knob bounds limit each argument, but aliases repeat a field (256 aliases of a 4 MB filler is
+// 1 GiB), so every HTTP request also has a budget of fields and string bytes, spent as each
+// field resolves and checked before anything is serialized.
+const newBudget = () => ({ fields: config.maxResponseFields, bytes: config.maxPayloadBytes });
+const budgetedResolver = (source, args, context, info) => {
+  const value = defaultFieldResolver(source, args, context, info);
+  const budget = context?.budget;
+  if (budget) {
+    budget.fields -= 1;
+    if (typeof value === 'string') budget.bytes -= value.length;
+    if (budget.fields < 0 || budget.bytes < 0) {
+      throw badInput(`response over the per-request budget: ${config.maxResponseFields} fields, ${config.maxPayloadBytes} bytes of strings`);
+    }
+  }
   return value;
 };
 
@@ -137,7 +156,8 @@ const recordOperation = (run, label, result) => {
 const makeHandler = ({ introspection }) => createHandler({
   schema,
   rootValue,
-  context: (req) => ({ run: req.raw.sutRun }),
+  context: (req) => ({ run: req.raw.sutRun, budget: newBudget() }),
+  execute: (args) => execute({ ...args, fieldResolver: budgetedResolver }),
   validationRules: introspection ? undefined : (req, args, specifiedRules) => [...specifiedRules, NoSchemaIntrospectionCustomRule],
   onOperation: (req, args, result) => {
     recordOperation(req.raw.sutRun, operationLabel(args), result);
@@ -237,14 +257,21 @@ const createGraphql = () => {
       let op;
       try {
         op = getOperationAST(parse(payload.query), payload.operationName);
-      } catch {
-        return undefined; // graphql-ws reports the syntax error
+      } catch (err) {
+        // Returned, not left to graphql-ws: a thrown syntax error closes the whole socket (4500)
+        // and every other subscription on it.
+        if (err instanceof GraphQLError) return [err];
+        throw err;
       }
       if (op && op.operation !== 'subscription') {
         return [new GraphQLError(`sut: send ${op.operation} operations over HTTP; this WebSocket takes subscriptions only`)];
       }
-      if (op) stats.get(ctx.extra.request.sutRun).graphql.subscriptionsStarted += 1;
       return undefined;
+    },
+    // After validation, and paired with onComplete: a subscription that fails validation is
+    // neither started nor completed.
+    onOperation: (ctx) => {
+      stats.get(ctx.extra.request.sutRun).graphql.subscriptionsStarted += 1;
     },
     onComplete: (ctx) => {
       stats.get(ctx.extra.request.sutRun).graphql.subscriptionsCompleted += 1;
