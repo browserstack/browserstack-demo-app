@@ -107,11 +107,19 @@ export function streams() {
   const ss = new grpc.Stream(client, 'sut.v1.LoadSut/ServerStream', { metadata: md });
   ss.on('data', () => { ssGot += 1; });
   ss.on('end', () => check(ssGot, { 'ServerStream got every message': (n) => n === SS_COUNT }));
+  // k6 only logs a stream error, so record it as a failed check.
+  ss.on('error', () => check(null, { 'ServerStream ended without error': () => false }));
   ss.write({ count: SS_COUNT, interval_ms: SS_INTERVAL_MS });
   ss.end();
 
+  let csReplies = 0;
   const cs = new grpc.Stream(client, 'sut.v1.LoadSut/ClientStream', { metadata: md });
-  cs.on('data', (reply) => check(reply, { 'ClientStream server counted every message': (r) => r.received === CS_SENT }));
+  cs.on('data', (reply) => {
+    csReplies += 1;
+    check(reply, { 'ClientStream server counted every message': (r) => r.received === CS_SENT });
+  });
+  cs.on('end', () => check(csReplies, { 'ClientStream got exactly one reply': (n) => n === 1 }));
+  cs.on('error', () => check(null, { 'ClientStream ended without error': () => false }));
   for (let s = 1; s <= CS_SENT; s += 1) cs.write({ seq: s });
   cs.end();
 
@@ -119,25 +127,30 @@ export function streams() {
   const bidi = new grpc.Stream(client, 'sut.v1.LoadSut/BidiEcho', { metadata: md });
   bidi.on('data', () => { echoed += 1; });
   bidi.on('end', () => check(echoed, { 'BidiEcho echoed every message': (n) => n === BIDI_SENT }));
+  bidi.on('error', () => check(null, { 'BidiEcho ended without error': () => false }));
   for (let s = 1; s <= BIDI_SENT; s += 1) bidi.write({ seq: s });
   bidi.end();
 }
 
 export function reflect() {
   const c = new grpc.Client();
-  let failed = false;
+  let error = '';
   try {
     c.connect(NOREFLECT, { plaintext: PLAINTEXT, reflect: true });
   } catch (e) {
-    failed = true;
+    error = String(e);
   }
-  check(failed, { 'reflection connect fails without reflection': (f) => f === true });
+  // Only "no reflection service" (UNIMPLEMENTED) gives the 3 status-12 rows the summary expects;
+  // any other failure (e.g. UNAVAILABLE) fails the check.
+  check(error, { 'reflection connect fails with UNIMPLEMENTED': (e) => /Unimplemented|unknown service/i.test(e) });
+  if (error) console.log(`reflection connect error: ${error}`);
 }
 
 // RUN is fixed unless set, so clear what an earlier execution left under it; teardown's counts
 // are then this execution's only. Not a gRPC call, so no gRPC figure changes.
 export function setup() {
-  http.post(`${HTTP}/reset?run=${encodeURIComponent(RUN)}`);
+  const res = http.post(`${HTTP}/reset?run=${encodeURIComponent(RUN)}`);
+  if (res.status !== 200) throw new Error(`could not reset run ${RUN} (HTTP ${res.status}); teardown counts would mix executions`);
 }
 
 export function teardown() {

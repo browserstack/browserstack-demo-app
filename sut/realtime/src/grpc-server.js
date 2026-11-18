@@ -59,6 +59,20 @@ const waitUnlessCancelled = (call, delayMs) =>
     call.once('cancelled', onCancel);
   });
 
+// Resolves once a full write buffer drains (true), or with false if the client cancels first.
+// Handlers stop producing while the client is not reading, so replies never pile up in memory.
+const drained = (call) =>
+  new Promise((resolve) => {
+    if (call.cancelled) return resolve(false);
+    const onDrain = () => { call.off('cancelled', onCancel); resolve(true); };
+    const onCancel = () => { call.off('drain', onDrain); resolve(false); };
+    call.once('drain', onDrain);
+    call.once('cancelled', onCancel);
+  });
+
+// Stream counters are looked up at each update: a /reset replaces a run's counts.
+const grpcStats = (b) => stats.get(b.run).grpc;
+
 const record = (b, method, outcome) => {
   const g = stats.get(b.run).grpc;
   if (outcome === 'cancelled') g.cancelled += 1;
@@ -80,6 +94,11 @@ const handlers = {
     } catch (err) {
       if (err instanceof BehaviourError) return invalid('Unary', err, callback);
       throw err;
+    }
+    // The reply echoes payload and adds payload_bytes of filler; both must fit in one message.
+    const replyBytes = Buffer.byteLength(call.request.payload || '') + b.payloadBytes;
+    if (replyBytes > config.maxPayloadBytes) {
+      return invalid('Unary', new BehaviourError(`payload plus payload_bytes must be at most ${config.maxPayloadBytes} bytes, got ${replyBytes}`), callback);
     }
     if (!(await waitUnlessCancelled(call, b.delayMs))) return record(b, 'Unary', 'cancelled');
     if (b.statusCode !== grpc.status.OK) {
@@ -106,13 +125,13 @@ const handlers = {
       if (err instanceof BehaviourError) return invalid('ServerStream', err, (e) => call.emit('error', e));
       throw err;
     }
-    const g = stats.get(b.run).grpc;
-    g.streamsOpened += 1;
+    grpcStats(b).streamsOpened += 1;
     if (!(await waitUnlessCancelled(call, b.delayMs))) return record(b, 'ServerStream', 'cancelled');
     for (let seq = 1; seq <= count; seq += 1) {
       if (seq > 1 && !(await waitUnlessCancelled(call, intervalMs))) return record(b, 'ServerStream', 'cancelled');
-      call.write({ seq, payload: `push ${seq}/${count}` });
-      g.streamMsgsOut += 1;
+      const flowing = call.write({ seq, payload: `push ${seq}/${count}` });
+      grpcStats(b).streamMsgsOut += 1;
+      if (!flowing && !(await drained(call))) return record(b, 'ServerStream', 'cancelled');
     }
     if (b.statusCode !== grpc.status.OK) {
       record(b, 'ServerStream', STATUS_NAME[b.statusCode]);
@@ -130,12 +149,11 @@ const handlers = {
       if (err instanceof BehaviourError) return invalid('ClientStream', err, callback);
       throw err;
     }
-    const g = stats.get(b.run).grpc;
-    g.streamsOpened += 1;
+    grpcStats(b).streamsOpened += 1;
     let received = 0;
     call.on('data', () => {
       received += 1;
-      g.streamMsgsIn += 1;
+      grpcStats(b).streamMsgsIn += 1;
     });
     call.on('end', async () => {
       if (!(await waitUnlessCancelled(call, b.delayMs))) return record(b, 'ClientStream', 'cancelled');
@@ -157,12 +175,15 @@ const handlers = {
       if (err instanceof BehaviourError) return invalid('BidiEcho', err, (e) => call.emit('error', e));
       throw err;
     }
-    const g = stats.get(b.run).grpc;
-    g.streamsOpened += 1;
+    grpcStats(b).streamsOpened += 1;
     call.on('data', (message) => {
-      g.streamMsgsIn += 1;
-      call.write(message);
-      g.streamMsgsOut += 1;
+      grpcStats(b).streamMsgsIn += 1;
+      grpcStats(b).streamMsgsOut += 1;
+      // A client that sends without reading: stop reading until the echoes drain.
+      if (!call.write(message)) {
+        call.pause();
+        drained(call).then((ok) => ok && call.resume());
+      }
     });
     call.on('end', async () => {
       if (!(await waitUnlessCancelled(call, b.delayMs))) return record(b, 'BidiEcho', 'cancelled');
@@ -207,7 +228,10 @@ const createGrpcServer = ({ reflection = true } = {}) => {
 };
 
 const credentials = () => {
-  if (!config.grpcTlsCert || !config.grpcTlsKey) return grpc.ServerCredentials.createInsecure();
+  if (!config.grpcTlsCert && !config.grpcTlsKey) return grpc.ServerCredentials.createInsecure();
+  if (!config.grpcTlsCert || !config.grpcTlsKey) {
+    throw new Error('set both SUT_GRPC_TLS_CERT and SUT_GRPC_TLS_KEY for gRPC TLS, or neither for plaintext');
+  }
   const fs = require('fs');
   return grpc.ServerCredentials.createSsl(null, [
     { cert_chain: fs.readFileSync(config.grpcTlsCert), private_key: fs.readFileSync(config.grpcTlsKey) },

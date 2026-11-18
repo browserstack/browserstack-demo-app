@@ -3,6 +3,8 @@ const { test, expect } = require('@playwright/test');
 // The live tests talk to the realtime SUT (sut/realtime). CI starts it on localhost;
 // against a deployment, set SUT_WS_URL (e.g. wss://ws.bstackdemo.com).
 const SUT_WS_URL = process.env.SUT_WS_URL || 'ws://localhost:8080';
+// The console drops a trailing slash before it adds the endpoint.
+const SUT_WS_BASE = SUT_WS_URL.replace(/\/+$/, '');
 
 async function openRealtime(page) {
   await page.goto('/sut/login');
@@ -21,12 +23,12 @@ test('the console builds the URL from the endpoint and only its knobs', async ({
   await page.locator('#knob-code').fill('1001');
   await page.locator('#knob-upgradeDelayMs').fill('300');
   await page.locator('#knob-run').fill('ui');
-  await expect(page.locator('#ws-url')).toHaveText(`${SUT_WS_URL}/hold?ms=2000&code=1001&upgradeDelayMs=300&run=ui`);
+  await expect(page.locator('#ws-url')).toHaveText(`${SUT_WS_BASE}/hold?ms=2000&code=1001&upgradeDelayMs=300&run=ui`);
 
   // /reject has no close knobs, so values typed for /hold are not carried over.
   await page.locator('#ws-preset').selectOption('reject');
   await page.locator('#knob-status').fill('503');
-  await expect(page.locator('#ws-url')).toHaveText(`${SUT_WS_URL}/reject?upgradeDelayMs=300&status=503&run=ui`);
+  await expect(page.locator('#ws-url')).toHaveText(`${SUT_WS_BASE}/reject?upgradeDelayMs=300&status=503&run=ui`);
   await expect(page.locator('#knob-ms')).toHaveCount(0);
 });
 

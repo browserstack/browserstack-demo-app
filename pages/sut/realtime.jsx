@@ -86,7 +86,16 @@ export default function SutRealtime() {
     let opened = false;
     setState('connecting');
     addLog(`connecting ${url}`);
-    const ws = new WebSocket(url);
+    let ws;
+    try {
+      ws = new WebSocket(url);
+    } catch (err) {
+      // e.g. an unsupported scheme: the constructor throws before any handler exists.
+      socketRef.current = null;
+      setState('closed');
+      addLog(`connection failed: ${err.message}`);
+      return;
+    }
     socketRef.current = ws;
     // A replaced socket still fires its close later; only the current one may update the page.
     const current = () => socketRef.current === ws;
@@ -113,7 +122,9 @@ export default function SutRealtime() {
 
   const loadStats = async () => {
     try {
-      const res = await fetch(`${toHttpBase(base)}/stats?run=${encodeURIComponent(knobs.run || '_')}`);
+      // Trimmed like buildSutUrl, so the stats lookup uses the run id the connections sent.
+      const run = String(knobs.run ?? '').trim() || '_';
+      const res = await fetch(`${toHttpBase(base)}/stats?run=${encodeURIComponent(run)}`);
       setStats(await res.json());
     } catch (err) {
       setStats({ error: `stats unavailable: ${err.message}` });
@@ -168,7 +179,7 @@ export default function SutRealtime() {
           </p>
           <div style={styles.actions}>
             <button id="ws-connect" style={styles.button} onClick={connect}>Connect</button>
-            <input id="ws-message" style={{ ...styles.input, maxWidth: '240px' }} value={message} onChange={(e) => setMessage(e.target.value)} />
+            <input id="ws-message" aria-label="WebSocket message" style={{ ...styles.input, maxWidth: '240px' }} value={message} onChange={(e) => setMessage(e.target.value)} />
             <button id="ws-send" style={styles.button} onClick={send} disabled={state !== 'open'}>Send</button>
             <button id="ws-disconnect" style={styles.secondaryButton} onClick={() => socketRef.current?.close(1000)} disabled={state !== 'open'}>Close (1000)</button>
             <button id="ws-stats" style={styles.secondaryButton} onClick={loadStats}>Server stats for run</button>

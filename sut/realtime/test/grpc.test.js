@@ -121,6 +121,27 @@ test('ClientStream and BidiEcho cancelled mid-stream are each counted once', asy
   assert.equal(Object.values(g.calls).reduce((a, b) => a + b, 0), 2);
 });
 
+test('Unary refuses a reply larger than one message (payload + payload_bytes)', async () => {
+  const config = require('../src/config');
+  const { err } = await unary(sut.client, { payload: 'x'.repeat(10), behaviour: { payload_bytes: config.maxPayloadBytes, run: 'big' } });
+  assert.equal(err.code, grpc.status.INVALID_ARGUMENT);
+  assert.match(err.details, /payload plus payload_bytes/);
+});
+
+test('stream message counts after a /reset go to the run, not the replaced counts', async () => {
+  await new Promise((resolve, reject) => {
+    const call = sut.client.ClientStream(metadata({ 'x-sut-run': 'rsx' }), (err) => (err ? reject(err) : resolve()));
+    call.write({ seq: 1 });
+    setTimeout(() => {
+      stats.reset('rsx');
+      call.write({ seq: 2 });
+      call.write({ seq: 3 });
+      call.end();
+    }, 50);
+  });
+  assert.equal(stats.snapshot('rsx').grpc.streamMsgsIn, 2);
+});
+
 const listServices = (port, version) => new Promise((resolve) => {
   const call = reflectionClient(port, version).ServerReflectionInfo();
   call.on('data', (r) => resolve({ services: (r.list_services_response?.service || []).map((s) => s.name), err: null }));

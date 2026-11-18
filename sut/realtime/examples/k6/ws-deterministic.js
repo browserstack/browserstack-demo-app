@@ -52,8 +52,13 @@ export const options = {
   },
 };
 
+// A fresh run id per execution; a fixed RUN is reset first so teardown's counts are this
+// execution's only. The reset is an HTTP request, so no WebSocket figure changes.
 export function setup() {
-  return { run: __ENV.RUN || `k6-ws-${Date.now()}` };
+  const run = __ENV.RUN || `k6-ws-${Date.now()}`;
+  const res = http.post(`${HTTP}/reset?run=${encodeURIComponent(run)}`);
+  if (res.status !== 200) throw new Error(`could not reset run ${run} (HTTP ${res.status}); teardown counts would mix executions`);
+  return { run };
 }
 
 export function failures(data) {
