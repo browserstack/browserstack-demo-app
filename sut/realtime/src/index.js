@@ -4,9 +4,16 @@ const { createGrpcServer, listen } = require('./grpc-server');
 const { createResetServer } = require('./reset-server');
 const { log } = require('./log');
 
+// Rejects on a bind error (e.g. port in use) so main's fatal log runs.
+const listenOn = (server, port) =>
+  new Promise((resolve, reject) => {
+    server.once('error', reject);
+    server.listen(port, '0.0.0.0', () => { server.off('error', reject); resolve(); });
+  });
+
 const main = async () => {
   const wsServer = createWsServer();
-  await new Promise((resolve) => wsServer.listen(config.wsPort, '0.0.0.0', resolve));
+  await listenOn(wsServer, config.wsPort);
 
   const grpcServer = createGrpcServer({ reflection: true });
   const grpcPort = await listen(grpcServer, config.grpcPort);
@@ -16,7 +23,7 @@ const main = async () => {
   let resetServer;
   if (config.resetPort) {
     resetServer = createResetServer();
-    await new Promise((resolve) => resetServer.listen(config.resetPort, '0.0.0.0', resolve));
+    await listenOn(resetServer, config.resetPort);
   }
 
   log('listening', {
@@ -24,7 +31,7 @@ const main = async () => {
     grpc: grpcPort,
     grpcNoReflection: grpcNoReflectionPort,
     reset: config.resetPort || 'off',
-    grpcTls: Boolean(config.grpcTlsCert),
+    grpcTls: Boolean(config.grpcTlsCert && config.grpcTlsKey),
   });
 
   const shutdown = (signal) => {

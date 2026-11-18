@@ -3,7 +3,8 @@
 # wrong WebSocket metric in Load Testing can never be blamed on the server itself.
 # 9.* (performance) and 12.*/13.* (permessage-deflate, off by design) are excluded.
 # Usage: start the SUT (npm start), then `npm run autobahn`. SUT_HOST defaults to the
-# Docker host as seen from the container. Exits non-zero if any case is FAILED.
+# Docker host as seen from the container. Exits non-zero if any case is FAILED, or closes
+# UNCLEAN where a clean close is required.
 set -eu
 cd "$(dirname "$0")"
 SUT_HOST="${SUT_HOST:-host.docker.internal}"
@@ -19,6 +20,6 @@ const r = require("./reports/server/index.json")["bstackdemo-realtime-sut"];
 const by = {};
 for (const [id, c] of Object.entries(r)) (by[c.behavior] ||= []).push(id);
 for (const [k, ids] of Object.entries(by)) console.log(k.padEnd(14), ids.length);
-const bad = Object.entries(r).filter(([, c]) => c.behavior === "FAILED" || c.behaviorClose === "FAILED");
-if (bad.length) { console.error("FAILED cases:", bad.map(([id]) => id).join(", ")); process.exit(1); }
+const bad = Object.entries(r).filter(([, c]) => c.behavior === "FAILED" || ["FAILED", "UNCLEAN"].includes(c.behaviorClose));
+if (bad.length) { console.error("FAILED or UNCLEAN cases:", bad.map(([id, c]) => `${id} (${c.behavior}/${c.behaviorClose})`).join(", ")); process.exit(1); }
 '
