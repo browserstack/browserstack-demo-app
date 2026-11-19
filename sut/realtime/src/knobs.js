@@ -50,6 +50,7 @@ const HEADER_KNOBS = {
   'x-sut-rst': 'rst',
   'x-sut-drop': 'drop',
   'x-sut-status': 'status',
+  'x-sut-delay-ms': 'delayMs',
   'x-sut-run': 'run',
 };
 

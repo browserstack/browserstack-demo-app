@@ -37,6 +37,7 @@ const main = async () => {
   const shutdown = (signal) => {
     log('shutdown', { signal });
     wsServer.wss.clients.forEach((ws) => ws.close(1001, 'server shutting down'));
+    wsServer.graphqlWss.clients.forEach((ws) => ws.close(1001, 'server shutting down'));
     wsServer.close();
     resetServer?.close();
     grpcServer.tryShutdown(() => {});

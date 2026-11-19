@@ -27,6 +27,15 @@ const emptyRun = () => ({
     streamMsgsIn: 0,
     streamMsgsOut: 0,
   },
+  graphql: {
+    operations: {},         // "<query|mutation> <name|anonymous> <ok|partial|error>" -> count
+    graphqlErrors: 0,       // entries in `errors` across executed operations
+    httpStatus: {},         // HTTP status of every /graphql* response
+    wsConnections: 0,       // subscription sockets opened
+    subscriptionsStarted: 0,
+    subscriptionsCompleted: 0,
+    ticksSent: 0,
+  },
 });
 
 const runs = new Map();

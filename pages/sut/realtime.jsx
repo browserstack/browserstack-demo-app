@@ -44,6 +44,16 @@ const GRPC_METHODS = [
   ['BidiEcho', 'stream StreamMessage', 'Echoes every message, ends on half-close (behaviour from metadata).'],
 ];
 
+const GRAPHQL_FIELDS = [
+  ['echo(message)', 'Returns the message.'],
+  ['delay(ms)', 'Resolves after ms: the response-time knob.'],
+  ['items(count, bytes)', 'count items with bytes of filler each: the payload-size knob.'],
+  ['fail(code, message)', 'A GraphQL error with extensions.code (HTTP 200); with another field it is partial data.'],
+  ['node { child { ... } }', 'An endless chain: the query decides the depth.'],
+  ['createItem(name, delayMs)', 'Mutation: creates an item after delayMs.'],
+  ['ticks(count, intervalMs)', 'Subscription: count ticks, intervalMs apart, then complete.'],
+];
+
 export default function SutRealtime() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -185,13 +195,13 @@ export default function SutRealtime() {
         </div>
 
         <div style={styles.card}>
-          <h2 style={styles.sectionTitle}>gRPC: sut.v1.LoadSut</h2>
+          <h2 style={styles.sectionTitle} id="grpc-heading">gRPC: sut.v1.LoadSut</h2>
           <p style={styles.note}>
             Port 50051 has server reflection; port 50052 has none. The definitions are <code>sut/realtime/proto/sut/v1/load_sut.proto</code>{' '}
             and its import <code>common.proto</code>. Set behaviour in the request or as metadata: <code>x-sut-delay-ms</code>,{' '}
             <code>x-sut-status</code>, <code>x-sut-status-message</code>, <code>x-sut-payload-bytes</code>, <code>x-sut-run</code>.
           </p>
-          <table style={styles.table} id="grpc-methods">
+          <table style={styles.table} id="grpc-methods" aria-labelledby="grpc-heading">
             <thead>
               <tr><th style={styles.th}>Method</th><th style={styles.th}>Request</th><th style={styles.th}>Behaviour</th></tr>
             </thead>
@@ -200,6 +210,29 @@ export default function SutRealtime() {
                 <tr key={method}>
                   <td style={styles.td}><code>{method}</code></td>
                   <td style={styles.td}><code>{request}</code></td>
+                  <td style={styles.td}>{behaviour}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div style={styles.card}>
+          <h2 style={styles.sectionTitle} id="graphql-heading">GraphQL</h2>
+          <p style={styles.note}>
+            <code>POST</code>/<code>GET {toHttpBase(base)}/graphql</code> (GraphQL over HTTP), <code>/graphql-nointrospect</code>{' '}
+            (introspection off), and subscriptions over <code>graphql-transport-ws</code> on <code>{base.replace(/\/+$/, '')}/graphql</code>.
+            HTTP request knobs: <code>delayMs</code>, <code>status</code>, <code>run</code>. Subscriptions take <code>run</code> only.
+            Each also works as an <code>x-sut-*</code> header. The WebSocket endpoint accepts subscriptions only.
+          </p>
+          <table style={styles.table} id="graphql-fields" aria-labelledby="graphql-heading">
+            <thead>
+              <tr><th style={styles.th}>Field</th><th style={styles.th}>Behaviour</th></tr>
+            </thead>
+            <tbody>
+              {GRAPHQL_FIELDS.map(([field, behaviour]) => (
+                <tr key={field}>
+                  <td style={styles.td}><code>{field}</code></td>
                   <td style={styles.td}>{behaviour}</td>
                 </tr>
               ))}

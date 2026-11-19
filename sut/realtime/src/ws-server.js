@@ -6,6 +6,7 @@ const { WebSocketServer } = require('ws');
 const config = require('./config');
 const knobsLib = require('./knobs');
 const stats = require('./stats');
+const { createGraphql, GRAPHQL_PATHS } = require('./graphql-server');
 const { log, describeAuth } = require('./log');
 
 const STATUS_TEXT = http.STATUS_CODES;
@@ -29,6 +30,12 @@ const ENDPOINTS = {
     echo: 'Set 0 to stop echoing client frames.',
     run: 'Run id the connection is counted under in /stats.',
     headers: 'Every knob also works as an x-sut-* header (x-sut-upgrade-delay-ms, x-sut-ms, x-sut-code, ...), which wins over the query. Use headers to vary a knob while keeping one URL.',
+  },
+  graphql: {
+    'POST|GET /graphql': 'GraphQL over HTTP (spec-compliant). Query echo, delay(ms), items(count, bytes), fail(code, message), node { child ... }; Mutation createItem(name, delayMs).',
+    'POST|GET /graphql-nointrospect': 'Same schema with introspection disabled (a validation error).',
+    'WS /graphql': 'Subscriptions over graphql-transport-ws: ticks(count, intervalMs).',
+    knobs: 'delayMs (wait before handling), status (answer with HTTP 400-599 without executing), run — query params or x-sut-delay-ms / x-sut-status / x-sut-run headers.',
   },
   http: {
     'GET /http/<status>': 'Plain HTTP response with that status (200-599); ?delayMs= delays it.',
@@ -65,6 +72,7 @@ const stripBase = (pathname, basePath) =>
 
 const createWsServer = ({ basePath = process.env.SUT_BASE_PATH || '' } = {}) => {
   const wss = new WebSocketServer({ noServer: true, autoPong: false, perMessageDeflate: false });
+  const graphql = createGraphql();
 
   const handleHttp = async (req, res) => {
     const url = new URL(req.url, 'http://sut.local');
@@ -108,6 +116,8 @@ const createWsServer = ({ basePath = process.env.SUT_BASE_PATH || '' } = {}) => 
       return sendJson(res, status, { status, message: STATUS_TEXT[status] || '' }, status === 429 ? { 'Retry-After': '1' } : {});
     }
 
+    if (GRAPHQL_PATHS.has(path)) return graphql.handleHttp(req, res, path, url);
+
     const preset = path.slice(1);
     if (knobsLib.PRESETS.has(preset)) {
       count(426);
@@ -121,6 +131,8 @@ const createWsServer = ({ basePath = process.env.SUT_BASE_PATH || '' } = {}) => 
   const handleUpgrade = async (req, socket, head) => {
     const url = new URL(req.url, 'http://sut.local');
     const path = stripBase(url.pathname, basePath);
+    if (path === '/graphql') return graphql.handleUpgrade(req, socket, head, url);
+
     const auth = describeAuth(req.headers.authorization);
     const params = knobsLib.withHeaderKnobs(url.searchParams, req.headers);
 
@@ -254,6 +266,7 @@ const createWsServer = ({ basePath = process.env.SUT_BASE_PATH || '' } = {}) => 
     });
   });
   server.wss = wss;
+  server.graphqlWss = graphql.subscriptions;
   return server;
 };
 

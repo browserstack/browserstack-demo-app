@@ -24,6 +24,10 @@ module.exports = {
   maxDelayMs: int('SUT_MAX_DELAY_MS', 300000),
   maxCount: int('SUT_MAX_COUNT', 100000),
   maxPayloadBytes: int('SUT_MAX_PAYLOAD_BYTES', 4 * 1024 * 1024 - 1024),
+  // Largest GraphQL request body read into memory; a bigger one is a 413.
+  maxBodyBytes: int('SUT_MAX_BODY_BYTES', 1024 * 1024),
+  // Per GraphQL request: fields resolved, and string bytes returned (aliases count each time).
+  maxResponseFields: int('SUT_MAX_RESPONSE_FIELDS', 1000000),
   // How many run ids /stats keeps before dropping the oldest.
   maxRuns: int('SUT_MAX_RUNS', 500),
   logRequests: process.env.SUT_LOG !== '0',
