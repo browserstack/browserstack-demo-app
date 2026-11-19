@@ -1,4 +1,4 @@
-* @browserstack/default_owner
+* @browserstack/default_owner @browserstack/qa-load-testing
 
 # SUT (realtime WebSocket + gRPC target) is owned by Load Testing QA.
 /sut/ @browserstack/qa-load-testing
