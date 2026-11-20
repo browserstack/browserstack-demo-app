@@ -52,6 +52,19 @@ jobs:
           cat server.log
           exit 1
 
+      # The realtime SUT (WebSocket + gRPC) backs the live tests in sut-realtime.spec.js.
+      - name: Start realtime SUT
+        working-directory: sut/realtime
+        run: |
+          npm ci
+          node src/index.js > ../../realtime.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8080/healthz && exit 0
+            sleep 1
+          done
+          cat ../../realtime.log
+          exit 1
+
       - name: Install e2e dependencies
         working-directory: e2e
         run: |
@@ -74,4 +87,5 @@ jobs:
             e2e/playwright-report
             e2e/test-results
             server.log
+            realtime.log
           retention-days: 7

@@ -189,7 +189,7 @@ test.describe('static and routing', () => {
     await expect(page.getByText('This page could not be found.')).toBeVisible();
   });
 
-  for (const path of ['/', '/signin', '/checkout', '/confirmation', '/favourites', '/offers', '/orders', '/swagger', '/sut', '/sut/login', '/sut/dashboard', '/sut/ui/zero-cls', '/sut/ui/high-cls', '/sut/ui/high-lcp', '/sut/ui/minimum-inp']) {
+  for (const path of ['/', '/signin', '/checkout', '/confirmation', '/favourites', '/offers', '/orders', '/swagger', '/sut', '/sut/login', '/sut/dashboard', '/sut/realtime', '/sut/ui/zero-cls', '/sut/ui/high-cls', '/sut/ui/high-lcp', '/sut/ui/minimum-inp']) {
     test(`page ${path} responds 200`, async ({ request }) => {
       const res = await request.get(path);
       expect(res.status()).toBe(200);

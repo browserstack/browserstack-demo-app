@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package sut.v1;
+
+// Imported on purpose: uploading load_sut.proto without common.proto must trigger the
+// "missing .proto import" warning in Load Testing.
+import "sut/v1/common.proto";
+
+// Deterministic gRPC target. Every call does exactly what its Behaviour asks, so each
+// gRPC metric in a Load Testing run has a value that can be computed in advance.
+service LoadSut {
+  // One request, one reply after behaviour.delay_ms, with behaviour.status_code.
+  rpc Unary(UnaryRequest) returns (UnaryReply);
+  // Sends exactly `count` messages, `interval_ms` apart, then ends with behaviour.status_code.
+  rpc ServerStream(StreamRequest) returns (stream StreamMessage);
+  // Reads until the client half-closes, then replies with how many messages arrived.
+  // Behaviour comes from metadata only (there is no request object up front).
+  rpc ClientStream(stream StreamMessage) returns (ClientStreamReply);
+  // Echoes every message; ends when the client half-closes. Behaviour from metadata only.
+  rpc BidiEcho(stream StreamMessage) returns (stream StreamMessage);
+}
+
+message UnaryRequest {
+  Behaviour behaviour = 1;
+  string payload = 2;
+}
+
+message UnaryReply {
+  string payload = 1;
+  bytes filler = 2;
+  int64 server_time_ms = 3;
+}
+
+message StreamRequest {
+  Behaviour behaviour = 1;
+  int32 count = 2;
+  int32 interval_ms = 3;
+}
+
+message StreamMessage {
+  int32 seq = 1;
+  string payload = 2;
+}
+
+message ClientStreamReply {
+  int32 received = 1;
+}

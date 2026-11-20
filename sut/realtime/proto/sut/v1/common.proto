@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package sut.v1;
+
+// How the server should answer one call. Every field is optional; the zero value means
+// "reply straight away with OK". The same knobs can be sent as metadata (x-sut-delay-ms,
+// x-sut-status, x-sut-status-message, x-sut-payload-bytes, x-sut-run); metadata wins.
+message Behaviour {
+  // Wait this long before answering. A value above the client deadline gives DEADLINE_EXCEEDED.
+  int32 delay_ms = 1;
+  // gRPC status code to answer with: 0 (OK) to 16 (UNAUTHENTICATED).
+  int32 status_code = 2;
+  // Details text for a non-OK status. Defaults to "sut: injected <CODE_NAME>".
+  string status_message = 3;
+  // Size of the filler bytes returned in the reply (OK only).
+  int32 payload_bytes = 4;
+  // Run id the call is counted under in GET /stats?run=<id>.
+  string run = 5;
+}

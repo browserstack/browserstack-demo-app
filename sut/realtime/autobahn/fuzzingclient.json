@@ -1,0 +1,9 @@
+{
+  "outdir": "/reports/server",
+  "servers": [
+    { "agent": "bstackdemo-realtime-sut", "url": "SUT_URL/echo" }
+  ],
+  "cases": ["*"],
+  "exclude-cases": ["9.*", "12.*", "13.*"],
+  "exclude-agent-cases": {}
+}

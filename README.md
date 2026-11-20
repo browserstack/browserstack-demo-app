@@ -62,3 +62,12 @@ To Test SUT:
 2. Navigate to: `http://localhost:3000/sut/login`
 3. Login with: `testuser` / `password`
 4. Access dashboard and test endpoints
+
+### Realtime SUT (WebSocket + gRPC)
+A WebSocket and gRPC target for Load Testing's WebSocket and gRPC reports lives in [sut/realtime](./sut/realtime/README.md). It runs as its own service:
+
+```shell
+cd sut/realtime && npm ci && npm start
+```
+
+Then open `http://localhost:3000/sut/realtime` (after the SUT login) for a browser console. Set `NEXT_PUBLIC_SUT_WS_URL` at build time to point the console at a deployed instance.

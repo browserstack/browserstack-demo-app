@@ -34,7 +34,7 @@ test('no uncaught page errors across full page loads', async ({ page, context })
   await page.goto('/sut/login');
   await page.locator('#login-submit-btn').click();
   await expect(page).toHaveURL(/\/sut\/dashboard$/);
-  for (const path of ['/sut/dashboard', '/sut/ui/zero-cls', '/sut/ui/minimum-inp', '/sut/ui/high-cls', '/sut/ui/high-lcp']) {
+  for (const path of ['/sut/dashboard', '/sut/realtime', '/sut/ui/zero-cls', '/sut/ui/minimum-inp', '/sut/ui/high-cls', '/sut/ui/high-lcp']) {
     await page.goto(path);
     await page.waitForLoadState('networkidle');
   }

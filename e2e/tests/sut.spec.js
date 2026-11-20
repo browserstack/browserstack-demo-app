@@ -36,6 +36,7 @@ test('dashboard lists every control endpoint and UI page', async ({ page, contex
     'api-error-5xx': '/api/control/error/server-fail',
     'api-error-3xx': '/api/control/error/redirect-temp',
     'api-zero-errors': '/api/zero/errors',
+    'realtime-console': '/sut/realtime',
     'ui-zero-cls': '/sut/ui/zero-cls',
     'ui-minimum-inp': '/sut/ui/minimum-inp',
     'ui-high-cls': '/sut/ui/high-cls',
@@ -78,7 +79,7 @@ test('logout clears the session cookie', async ({ page, context }) => {
   expect(cookies.find((c) => c.name === 'sutSessionId')).toBeFalsy();
 });
 
-for (const path of ['/sut/dashboard', '/sut/ui/zero-cls', '/sut/ui/high-cls', '/sut/ui/high-lcp', '/sut/ui/minimum-inp']) {
+for (const path of ['/sut/dashboard', '/sut/realtime', '/sut/ui/zero-cls', '/sut/ui/high-cls', '/sut/ui/high-lcp', '/sut/ui/minimum-inp']) {
   test(`${path} without a session redirects to login`, async ({ page }) => {
     await page.goto(path);
     await expect(page).toHaveURL(/\/sut\/login$/);

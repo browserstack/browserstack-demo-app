@@ -1,0 +1,24 @@
+{
+  "name": "bstackdemo-realtime-sut",
+  "version": "0.1.0",
+  "private": true,
+  "description": "WebSocket + gRPC + GraphQL system under test for BrowserStack Load Testing metric validation",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test --test-concurrency=1 \"test/*.test.js\"",
+    "autobahn": "sh autobahn/run.sh"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.3",
+    "@grpc/proto-loader": "^0.8.0",
+    "@grpc/reflection": "^1.0.4",
+    "graphql": "^17.1.0",
+    "graphql-http": "^1.23.1",
+    "graphql-ws": "^6.4.2",
+    "ws": "^8.18.3"
+  }
+}

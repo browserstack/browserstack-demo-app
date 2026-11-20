@@ -1,0 +1,189 @@
+# Realtime SUT: WebSocket + gRPC + GraphQL
+
+A system under test for BrowserStack Load Testing's WebSocket, gRPC and GraphQL reports. Every behaviour
+is chosen by the client (query params, `x-sut-*` headers, request fields or gRPC metadata), so
+every metric a k6 or JMeter run reports has a value you can compute before the run.
+
+It is a separate Node service, not a Next.js route: Next API routes cannot hold a WebSocket or
+serve gRPC or GraphQL subscriptions. The `/sut/realtime` page in the app is a browser console for it.
+
+```shell
+cd sut/realtime
+npm ci
+npm start          # ws/http/graphql :8080, gRPC :50051 (reflection) and :50052 (none), TCP reset :50099
+npm test           # unit tests (node:test)
+npm run autobahn   # RFC 6455 conformance against /echo (needs Docker and a running SUT)
+```
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `SUT_WS_PORT` | 8080 | HTTP + WebSocket |
+| `SUT_GRPC_PORT` / `SUT_GRPC_NOREFLECT_PORT` | 50051 / 50052 | gRPC with / without server reflection |
+| `SUT_RESET_PORT` | 50099 | TCP listener that resets every connection (`0` turns it off) |
+| `SUT_GRPC_TLS_CERT` / `SUT_GRPC_TLS_KEY` | – | In-process TLS for gRPC when the load balancer passes TCP through |
+| `SUT_BASE_PATH` | – | Path prefix to strip when served under e.g. `/sut/ws` |
+| `SUT_LOG` | on | `0` turns off the one-line-per-connection JSON log |
+
+## WebSocket
+
+No auth and no subprotocol are required. Any query string is accepted (e.g. `?leg=x`); an
+`Authorization` header is accepted and logged as scheme, length and a short hash, never the value
+(the scheme reads `unknown` unless it is a standard one such as `Bearer` or `Basic`).
+
+| Endpoint | Behaviour |
+| --- | --- |
+| `/echo` | Accepts the upgrade, echoes every frame, answers pings. |
+| `/hold?ms=N` | Closes N ms after the 101 with `code` (default 1000). |
+| `/close?code=C` | Closes with C right away, or after `ms`. 1004-1006 and 1015 cannot be sent and are a 400. |
+| `/drop` | Kills the TCP connection with no close frame (client sees 1006). `ms` delays it; `rst=0` sends FIN instead of RST. |
+| `/push?n=N` | Sends N extra messages (`push i/N`) after the 101; `pushIntervalMs` spaces them. |
+| `/reject?status=S` | Refuses the upgrade with HTTP S (400-599, default 403). |
+
+Knobs work on every path and combine, e.g. `/hold?ms=2000&n=5&code=1001&upgradeDelayMs=300`:
+`upgradeDelayMs`, `pongDelayMs`, `ms`, `code`, `n`, `pushIntervalMs`, `echo` (0 stops echoing),
+`drop`, `rst`, `status`, `run`. Each also works as an `x-sut-*` header
+(`x-sut-upgrade-delay-ms`, `x-sut-ms`, `x-sut-code`, …), which wins over the query string.
+A malformed knob is a 400 on the upgrade, an unknown path a 404.
+
+HTTP helpers on the same port: `GET /http/<status>` (200-599, `?delayMs=`), `GET /stats?run=<id>`,
+`POST /reset?run=<id>`, `GET /healthz`, and `GET /` for this list as JSON.
+
+## gRPC: `sut.v1.LoadSut`
+
+Definitions: [`proto/sut/v1/load_sut.proto`](proto/sut/v1/load_sut.proto), which imports
+`sut/v1/common.proto` (upload one without the other to trigger the missing-import warning).
+
+| Method | Behaviour |
+| --- | --- |
+| `Unary` | Replies after `behaviour.delay_ms` with `behaviour.status_code` (0-16) and `payload_bytes` of filler. |
+| `ServerStream` | Sends exactly `count` messages, `interval_ms` apart, then ends with the status. |
+| `ClientStream` | Replies with how many messages arrived. |
+| `BidiEcho` | Echoes every message; ends when the client half-closes. |
+
+Behaviour can also come from metadata, which wins: `x-sut-delay-ms`, `x-sut-status`,
+`x-sut-status-message`, `x-sut-payload-bytes`, `x-sut-run`. Streams take behaviour from metadata
+only. A delay past the client deadline gives `DEADLINE_EXCEEDED`; out-of-range values are
+`INVALID_ARGUMENT`. Port 50052 has no reflection, so a reflection connect there fails.
+
+## GraphQL
+
+GraphQL over HTTP on the HTTP port, served by [graphql-http](https://github.com/graphql/graphql-http)
+(the reference implementation of the GraphQL-over-HTTP spec), and subscriptions over WebSocket
+with [graphql-ws](https://github.com/enisdenjo/graphql-ws) (subprotocol `graphql-transport-ws`).
+
+| Endpoint | Behaviour |
+| --- | --- |
+| `POST` / `GET /graphql` | Executes the operation. `GET` runs queries only (a mutation is a 405). A body over `SUT_MAX_BODY_BYTES` (default 1 MiB) is a 413. Each request may resolve at most `SUT_MAX_RESPONSE_FIELDS` fields (default 1,000,000) and `SUT_MAX_PAYLOAD_BYTES` of strings, aliases included; past that the result is a `BAD_USER_INPUT` error. |
+| `POST` / `GET /graphql-nointrospect` | Same schema; introspection is a validation error. |
+| `WS /graphql` | Subscriptions only: a query or mutation sent here gets an error (send those over HTTP). A client that offers another subprotocol fails the handshake; one that offers none is closed with 4406. |
+
+Schema (`src/graphql-server.js`): every field is a knob.
+
+| Field | Behaviour |
+| --- | --- |
+| `echo(message)` | Returns the message. |
+| `delay(ms)` | Resolves after `ms`: the response-time knob. |
+| `items(count, bytes)` | Returns `count` items with `bytes` of filler each: the payload-size knob. |
+| `fail(code, message)` | Raises a GraphQL error with `extensions.code`: HTTP 200, the field is `null`. With another field in the same operation it is partial data. |
+| `node { child { child … } }` | An endless chain: the query decides the depth. |
+| `createItem(name, delayMs)` (mutation) | Creates an item after `delayMs`. |
+| `ticks(count, intervalMs)` (subscription) | Sends `count` ticks, `intervalMs` apart (the first at once), then completes. |
+
+Request-level knobs (query param or header; the header wins). Subscriptions take `run` only:
+- `delayMs` / `x-sut-delay-ms`: wait before handling the request. The query text stays the same, so the operation row in a report stays the same.
+- `status` / `x-sut-status`: answer with that HTTP status (400-599) and a GraphQL error body (`extensions.code` = `HTTP_<status>`), without executing.
+- `run` / `x-sut-run`: count the request under `/stats?run=<id>`.
+
+`/stats` counts operations as `<query|mutation> <name|anonymous> <ok|partial|error>`. A
+`status`-knob response is answered without executing, so it is counted in `httpStatus` only, not
+in `operations` or `graphqlErrors`: Load Testing's `graphqlErrorCount`, which parses that error
+body too, is the SUT's `graphqlErrors` plus those responses. *partial* means errors plus at least one top-level field with data; all-null data is *error*. It also counts GraphQL errors, the HTTP status of every response, subscription sockets (once the upgrade succeeds), subscriptions started and completed, and ticks sent (none after the client leaves).
+
+A validation error (unknown field, introspection on `/graphql-nointrospect`) is HTTP 200 for clients
+that accept `application/json` (k6 and JMeter by default), and 400 only for clients that ask for
+`application/graphql-response+json` — that is the spec's rule, not a SUT choice.
+
+## Server-side counts
+
+`GET /stats?run=<id>` returns what the server saw for connections and calls tagged with that run
+id: upgrades accepted / rejected by status, messages in / out, pings, close codes (the code the
+server sent when it started the close), peak concurrent sessions, gRPC calls by method and
+status, cancels, stream counters, and HTTP responses by `<path> <status>` (every unknown path
+shares the key `* 404`). Compare them with the Load Testing report for the same run.
+Counts are per process, so run one replica (or sum across replicas).
+A client-streaming call that the client cancels after sending its messages looks to the server
+like a normal half-close (grpc-js), so it is counted once, under the status the server sent.
+
+## Deterministic k6 scripts
+
+[`examples/k6/ws-deterministic.js`](examples/k6/ws-deterministic.js),
+[`examples/k6/grpc-deterministic.js`](examples/k6/grpc-deterministic.js) and
+[`examples/k6/graphql-deterministic.js`](examples/k6/graphql-deterministic.js) drive every
+WebSocket / gRPC / GraphQL metric to a value computed from the script's own constants, and print
+the value Load Testing should report next to what k6 measured, plus the SUT's `/stats` counts for
+the run. The GraphQL design follows Load Testing's response-check sampling (first 20 responses per
+operation per VU, then 1 in 4): every VU makes 10 calls per operation or fewer and every body stays
+under 2 KB, so every response is checked; each operation has one fixed delay, because per-row
+percentiles are TDigest.
+
+```shell
+cd sut/realtime   # SUT running on the host
+docker run --rm --add-host=host.docker.internal:host-gateway -v "$PWD:/w" -w /w \
+  grafana/k6:2.2.0 run examples/k6/ws-deterministic.js
+```
+
+Against a deployed SUT pass `-e SUT_WS=wss://ws.bstackdemo.com` (WebSocket) or the `SUT_GRPC*`
+variables documented at the top of the gRPC script.
+
+## Notes for test authors (calibrated on k6 v2.2.0 and JMeter 5.6.3, 2026-11-16)
+
+These are engine behaviours, not SUT behaviours, but every expected value depends on them.
+
+**k6 WebSocket (`k6/ws` and `k6/websockets`)**
+- `ws_sessions` and `ws_connecting` are emitted for **every attempt**, including rejected,
+  refused and reset ones. A rejected upgrade carries its HTTP status (`403`); a refused or reset
+  connection carries no status tag.
+- `ws_session_duration` **includes the connect time** (≈ `upgradeDelayMs + ms`).
+- `k6/ws` also emits `ws_session_duration` (≈ 0-3 ms) for failed attempts; `k6/websockets` does not.
+- `k6/ws` stamps a session at open; `k6/websockets` stamps it at close.
+- `ws_msgs_sent`: `k6/ws` counts data frames only; `k6/websockets` also counts each ping and a
+  client-initiated close frame. Pongs are never counted as received.
+- `ws_ping` ≈ `pongDelayMs` + network round trip.
+- The `url` tag is the full URL including the query string, and a custom `url` tag does not
+  replace it. Vary knobs with `x-sut-*` headers to keep one URL per report row.
+
+**JMeter WebSocket (Peter Doornbosch samplers 1.3.2)**
+- The `Connect` column includes the whole upgrade (≈ `upgradeDelayMs`). Use `upgradeDelayMs ≥ 1`
+  so it is never 0.
+- Rejected upgrade: code `403`, message `Got unexpected status 403 …`. Refused port:
+  `WebSocket I/O error: Connection refused`. Reset port: `WebSocket I/O error: Connection reset`,
+  which reads as a mid-session drop, not a connection error. Use a refused port for the
+  connection-error leg.
+- A server-initiated close is only recorded with its code by a **Close sampler** that runs after
+  the server closed (it reports the server's code, e.g. 1001). A Read sampler that receives the
+  close frame reports `Sampler error: unexpected frame type (close)` instead.
+- Write rows: `200` with sent bytes; Read rows: `200` with bytes; a Ping/Pong sampler has both.
+
+**k6 gRPC (`k6/net/grpc`)**
+- Every unary call and every stream emits one `grpc_req_duration` (a stream's covers its whole
+  life). `grpc_streams` is 1 per stream; a ServerStream's request counts as one sent message.
+- Stock k6 emits nothing for a call that hits its deadline (Load Testing patches this), and
+  nothing for an unreachable target (the connect throws).
+- `reflect: true` against a server without reflection emits three status-12 samples with no
+  method or name tags; against a server with reflection it emits none.
+
+**GraphQL — k6 v2.2.0 (`k6/http`, `k6/websockets`) and JMeter 5.6.3 (built-in GraphQL HTTP Request), 2026-11-17**
+- A GraphQL error, partial data and a validation error are all **HTTP 200**: k6 `http_req_failed` is
+  0 and JMeter `success` is true. Only a non-2xx status (the `status` knob) counts as failed.
+- k6 tags every POST with the same `url` / `name` (`…/graphql`), so operations are not told apart
+  unless the script sets a `name` tag or the reader parses the body. A GET puts the query text in
+  the `url` tag, so each distinct GET query is its own row.
+- JMeter labels the row with the sampler name and records the full URL.
+- A subscription with `k6/websockets` counts `connection_init`, `subscribe` and the client close
+  frame as sent (3), and `connection_ack`, each `next` and `complete` as received.
+
+**JMeter gRPC (`jmeter-grpc-request` 2.0.2)**
+- OK: code `200`, message ` success`. Error: code ` 500`, message ` <code> <NAME>`. URL is `null`.
+- Once a sampler gets a non-OK status, **later runs of that same sampler on that thread fail
+  immediately with `14 UNAVAILABLE` ("Channel shutdown invoked") without reaching the server**.
+  Other samplers are unaffected. Plan error legs with that in mind.
