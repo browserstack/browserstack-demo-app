@@ -22,6 +22,8 @@ import http from 'k6/http';
 import exec from 'k6/execution';
 import { check } from 'k6';
 
+// The plaintext default is the local SUT; a deployed run passes SUT_WS=wss://...
+// nosemgrep: javascript.lang.security.detect-insecure-websocket.detect-insecure-websocket
 const WS = (__ENV.SUT_WS || 'ws://host.docker.internal:8080').replace(/\/+$/, '');
 const HTTP = WS.replace(/^ws/, 'http');
 

@@ -8,8 +8,11 @@
 set -eu
 cd "$(dirname "$0")"
 SUT_HOST="${SUT_HOST:-host.docker.internal}"
+# Autobahn tests the SUT's own plaintext listener; TLS is terminated by the load balancer.
+# nosemgrep: javascript.lang.security.detect-insecure-websocket.detect-insecure-websocket
+SUT_URL="ws://${SUT_HOST}:8080"
 mkdir -p reports config
-sed "s/SUT_HOST/${SUT_HOST}/" fuzzingclient.json > config/fuzzingclient.json
+sed "s|SUT_URL|${SUT_URL}|" fuzzingclient.json > config/fuzzingclient.json
 docker run --rm \
   --add-host=host.docker.internal:host-gateway \
   -v "$PWD/config:/config" -v "$PWD/reports:/reports" \

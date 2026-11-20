@@ -252,6 +252,8 @@ const createWsServer = ({ basePath = process.env.SUT_BASE_PATH || '' } = {}) => 
     ws.on('error', (err) => log('ws_error', { path: meta.path, run: knobs.run, error: err.message }));
   };
 
+  // Plaintext by design: TLS is terminated by the load balancer in front of the SUT.
+  // nosemgrep: problem-based-packs.insecure-transport.js-node.using-http-server.using-http-server
   const server = http.createServer((req, res) => {
     handleHttp(req, res).catch((err) => {
       log('http_error', { error: err.message });

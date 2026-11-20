@@ -9,7 +9,7 @@ const int = (name, fallback) => {
 };
 
 module.exports = {
-  // HTTP + WebSocket listener (ws:// locally; TLS is terminated by the load balancer).
+  // HTTP + WebSocket listener (plaintext here; TLS is terminated by the load balancer).
   wsPort: int('SUT_WS_PORT', 8080),
   // gRPC with server reflection, and a second listener with reflection off.
   grpcPort: int('SUT_GRPC_PORT', 50051),
