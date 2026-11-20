@@ -5,7 +5,7 @@ export default function SutIndex() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/sut/login');
+    router.replace('/sut/dashboard');
   }, [router]);
 
   return <div>Redirecting to SUT Login...</div>;

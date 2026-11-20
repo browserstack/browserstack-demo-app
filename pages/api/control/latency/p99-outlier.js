@@ -1,4 +1,4 @@
-import { delay, checkSutAuth } from '../../../../src/services/sut-utils';
+import { delay } from '../../../../src/services/sut-utils';
 
 /**
  * @swagger
@@ -12,9 +12,6 @@ import { delay, checkSutAuth } from '../../../../src/services/sut-utils';
  *         description: Unauthorized
  */
 export default async function handler(req, res) {
-  if (!checkSutAuth(req)) {
-    return res.status(401).json({ error: 'Authentication required' });
-  }
 
   const randomValue = Math.random();
   const delayTime = randomValue < 0.01 ? 5000 : 200; // 1% slow, 99% fast
