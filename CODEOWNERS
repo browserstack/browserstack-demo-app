@@ -1,1 +1,6 @@
 * @browserstack/default_owner
+
+/sut/ @browserstack/qa-load-testing
+/pages/sut/ @browserstack/qa-load-testing
+/e2e/tests/sut*.spec.js @browserstack/qa-load-testing
+/.github/workflows/sut-*.yml @browserstack/qa-load-testing
