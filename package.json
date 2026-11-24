@@ -13,12 +13,12 @@
   "dependencies": {
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
-    "axios": "^1.20.0",
+    "axios": "^1.21.1",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.9",
-    "next": "16.4.2",
+    "next": "16.4.6",
     "next-swagger-doc": "^0.5.0",
-    "postcss-preset-env": "^11.6.1",
+    "postcss-preset-env": "^11.6.3",
     "prop-types": "^15.8.1",
     "react": "18.3.1",
     "react-device-detect": "^2.2.3",
@@ -27,9 +27,9 @@
     "react-select": "^3.2.0",
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
-    "sass": "^1.105.2",
+    "sass": "^1.108.2",
     "store2": "^2.14.4",
-    "swagger-ui-react": "^5.34.0"
+    "swagger-ui-react": "^5.35.1"
   },
   "browserslist": [
     "chrome >= 49",
